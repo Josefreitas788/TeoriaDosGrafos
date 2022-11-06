@@ -1,6 +1,5 @@
 /*Faça em C/C++ um programa que construa uma matriz de adjacência a partir de informações fornecidas pelo usuário (qtde. de vértices, qtde. de arestas, arestas, ou seja, os vértices que definem cada aresta). Considerem os vértices como números.*/
 #include <iostream>
-#include <stdlib.h>
 using namespace std;
 int main()
 {
