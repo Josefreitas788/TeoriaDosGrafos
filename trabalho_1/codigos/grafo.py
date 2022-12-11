@@ -16,38 +16,55 @@ class Grafo:
             print("Grau do vertice ", i, " = ", qtd)
 
             
-    def bfs(self, vertice):
-        queue  = [vertice]
-        visitados = [vertice]
-        level = 0
-        cont_levelAtual = len(self.grafo[vertice])
+    def teste(self,vertice):
+        print(self.grafo[vertice])
 
-        while len(queue) != 0:
-            vertice = queue.pop(0)
-            if cont_levelAtual == 0:
-                level += 1
-                cont_levelAtual = len(self.grafo[vertice])
-            cont_levelAtual -= 1
+    def bfs(self, vertice):
+        
+        queue  = [vertice]
+        visitados = []
+        level = {}
+        level[vertice] = 0
+
+
+        while queue:
             
-            #print("Vertice =", vertice, "Level ", level)
-            #adiciona vizinhos nao visitados
-            for i in self.grafo[vertice]:
-                if i not in visitados:
+            vertice = queue.pop(0)
+            if vertice not in visitados:
+               
+                print("Vertice: ", vertice, " Nivel: ", level[vertice])
+                visitados.append(vertice)
+                
+
+                for i in self.grafo[vertice] :
+
+                    level[i] = level[vertice] + 1
                     queue.append(i)
-                    visitados.append(i)
-                    
+
+        print(visitados)
         return visitados
-    
+
+
+
+
     def dfs(self, vertice):
+        
         visitados = []
         stack = [vertice]
-        while len(stack) != 0:
+        level = {}
+        level[vertice] = 0
+        while stack:
             vertice = stack.pop()
             if vertice not in visitados:
+                print("Vertice: ", vertice, " Nivel: ", level[vertice])
                 visitados.append(vertice)
                 for i in self.grafo[vertice]:
-                    stack.append(i)
+                    if i not in visitados:
+                        stack.append(i)
+                        level[i] = level[vertice] + 1
+        print(visitados)
         return visitados
+
     def read_file(self, input_file):
         input = open(input_file, "r")
       
@@ -63,4 +80,8 @@ class Grafo:
 
 
 g = Grafo("../as_graph.txt")
-g.dfs(1)
+g.teste(1000)
+print("BFS")
+g.bfs(1)
+print("DFS")
+#g.dfs(1)
