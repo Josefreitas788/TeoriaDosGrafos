@@ -7,6 +7,7 @@ class Grafo:
         print("Grafo = ",self.grafo)
         print("Vertices = ", self.vertices)
         arestas =  sum([len(self.grafo[i]) for i in self.grafo])
+        print("Arestas = ", arestas)
         #grau vertices
         for i in self.grafo:
             qtd = len(self.grafo[i])
@@ -35,11 +36,11 @@ class Grafo:
                 print("Vertice: ", vertice, " Nivel: ", level[vertice])
                 visitados.append(vertice)
                 
-
                 for i in self.grafo[vertice] :
 
-                    level[i] = level[vertice] + 1
-                    queue.append(i)
+                    if i not in visitados:
+                        level[i] = level[vertice] + 1
+                        queue.append(i)
 
         print(visitados)
         return visitados
@@ -53,12 +54,17 @@ class Grafo:
         stack = [vertice]
         level = {}
         level[vertice] = 0
+        
         while stack:
+
             vertice = stack.pop()
             if vertice not in visitados:
+                
                 print("Vertice: ", vertice, " Nivel: ", level[vertice])
                 visitados.append(vertice)
+                
                 for i in self.grafo[vertice]:
+                    
                     if i not in visitados:
                         stack.append(i)
                         level[i] = level[vertice] + 1
@@ -75,13 +81,13 @@ class Grafo:
                 self.grafo[int(x[0])].append(int(x[1]))
             except:
                 self.vertices = int(x[0])
-                self.grafo = { i: [] for i in range(1 , self.vertices) }
+                self.grafo = { i: [] for i in range(1 , self.vertices+1) }
                 pass
 
 
-g = Grafo("../as_graph.txt")
-g.teste(1000)
+g = Grafo("../teste.txt")
+g.dados()
 print("BFS")
 g.bfs(1)
 print("DFS")
-#g.dfs(1)
+g.dfs(1)
