@@ -7,7 +7,7 @@ class Grafo:
         print("Grafo = ",self.grafo)
         print("Vertices = ", self.vertices)
         arestas =  sum([len(self.grafo[i]) for i in self.grafo])
-        print("Arestas = ", arestas)
+        print("Arestas = ", arestas//2)
         #grau vertices
         for i in self.grafo:
             qtd = len(self.grafo[i])
@@ -16,7 +16,13 @@ class Grafo:
                     qtd += 1
             print("Grau do vertice ", i, " = ", qtd)
 
-            
+    def conexo(self):
+        visitados = self.dfs(1)
+        if len(visitados) == self.vertices:
+            print("Grafo conexo")
+        else:
+            print("Grafo desconexo")
+
     def teste(self,vertice):
         print(self.grafo[vertice])
 
@@ -79,6 +85,8 @@ class Grafo:
             try:
                 x[1] = x[1].replace("\n", "")
                 self.grafo[int(x[0])].append(int(x[1]))
+                if int(x[0]) not in self.grafo[int(x[1])]:
+                    self.grafo[int(x[1])].append(int(x[0]))
             except:
                 self.vertices = int(x[0])
                 self.grafo = { i: [] for i in range(1 , self.vertices+1) }
@@ -86,8 +94,11 @@ class Grafo:
 
 
 g = Grafo("../teste.txt")
+#g = Grafo("../collaboration_graph.txt")
+#g = Grafo("../as_graph.txt")
 g.dados()
 print("BFS")
 g.bfs(1)
 print("DFS")
 g.dfs(1)
+g.conexo()
