@@ -29,13 +29,34 @@ class GrafoAdjacente:
 
         # Matriz 
         self.grafomatriz = []
+        self.grafomatriz_teste = []
         # linha
         for i in range(0, int(self.vertices[0])):
             self.grafomatriz.append([])
+            
             #coluna
             for j in range (0, int(self.vertices[0])):
                 self.grafomatriz[i].append(0)
+                
+        
+        for y in range(0, int(self.vertices[0])):
+            self.grafomatriz_teste.append([])
+            print('y type= ',  y)
+            print('lista[y][0] = ',type( lista[y][0]))
+            if(int(lista[y][0]) == y+1):
+                self.grafomatriz_teste[y].insert(0,1)
+            else: 
+                self.grafomatriz_teste[y].insert(0,0)
 
+        print('grafomatriz_teste = ',self.grafomatriz_teste)
+        
+        # lista_bla = ['um', 'dois']
+        # #lista_bla[2] = 'três'
+        # lista_bla.insert(0,"borracha") 
+        # print('lista_bla = ' , lista_bla)
+     
+
+        print(lista)    
         for x in lista:
             self.preenche_matriz(x)
 
