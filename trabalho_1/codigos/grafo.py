@@ -25,27 +25,71 @@ class Grafo:
             print("Grafo conexo")
         else:
             print("Grafo desconexo")
-            print("Grafo = ",  self.grafo)
-            grafot = [[1,2], [2,5], [3,5], [4,5], [5,1], [6,7], [8,9]]
-            self.componentes_conexos(grafot)
+            # grafot = [[1,2], [2,5], [3,5], [4,5], [5,1], [6,7], [8,9]]
+            self.componentes_conexos( self.grafo)
             # chama a função
      
-    def componentes_conexos(self, G):
-        print('ENTROU = ', G)
+    def componentes_conexos(self, grafo):
         id = 0
-        for i in range(0, len(G)):
-           # self.cc[i].append(-1)
-           self.cc.insert(i, -1) 
-        for j in range(0, len(G)):
-            if(self.cc[j] == -1):
-                print('algo = ', self.grafo)
+        self.dic_grafo = {}
+        aux_grafo = grafo
+        aux = False
 
-                # atribui o número id a todos os vértices que estão na mesma componente conexa que v. A função supõe que o grafo G é representado por listas de adjacência. 
+        for j in grafo:    
+            # primeiro item
+            if(len(self.dic_grafo) == 0):
+                self.dic_grafo[id] = aux_grafo[j]
+                self.dic_grafo[id].insert(0, j)
+                id =+ 1
+                aux = True
+            else:
+                for i in self.dic_grafo:
+                    if(j in self.dic_grafo[i]):
+                        self.dic_grafo[i] = aux_grafo[j]
+                        self.dic_grafo[i].insert(0, j)
+                    else:
+                        print('aux_grafo[j] = ', aux_grafo[j] )
+                        for x in aux_grafo[j]:
+                            if(x in self.dic_grafo[i]):
+                                print('Está dentro da lista \o/')
+                                self.dic_grafo[i].insert(0, j)
+                                break
+                            else:
+                                aux = True
+                        
+                        if(aux == True):
+                            self.dic_grafo[id] = aux_grafo[j]
+                            # self.dic_grafo[id].insert(0, j)
+                            # id =+ 1
+                            print('aux_grafo[j] == ', aux_grafo[j] )
+                            print('aux == True')
 
-                self.add_id_componentes_conexos(self.grafo, j, id+1)
+                       
 
-        print('id = ', id)
-        print('self.cc = ', self.cc)
+                # se um elemento do grafo[i] estiver no dic_graf ele é apagado do aux_grafo
+                # for i in range(j ,len(grafo)+1):
+                #if(grafo[j])
+
+            print('j = ', j)
+            print('aux_grafo = ', aux_grafo)
+            print('self.dic_grafo = ', self.dic_grafo)
+            print('id = ', id)
+            # print('len = ',len(self.dic_grafo))
+        
+       
+        # for i in range(0, len(grafo)):
+        #    # self.cc[i].append(-1)
+        #    self.cc.insert(i, -1) 
+        # for j in range(0, len(grafo)):
+        #     if(self.cc[j] == -1):
+        #         print('algo = ', self.grafo)
+
+        #         # atribui o número id a todos os vértices que estão na mesma componente conexa que v. A função supõe que o grafo G é representado por listas de adjacência. 
+
+        #         self.add_id_componentes_conexos(self.grafo, j, id+1)
+
+        # print('id = ', id)
+        # print('self.cc = ', self.cc)
 
     def add_id_componentes_conexos(self, grafo, v, id):
         self.cc[v] = id
