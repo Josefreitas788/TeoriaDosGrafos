@@ -1,0 +1,16 @@
+Quantidade de componentes do grafo = 3
+Menor componente conexo = 2
+Maior componente conexo = 5
+Componentes conexos do grafo = {0: [5, 2, 3, 4, 1], 1: [7, 6], 2: [9, 8]}
+Quantidade de componentes do grafo = 3
+Menor componente conexo = 2
+Maior componente conexo = 5
+Componentes conexos do grafo = {0: [5, 2, 3, 4, 1], 1: [7, 6], 2: [9, 8]}
+Quantidade de componentes do grafo = 3
+Menor componente conexo = 2
+Maior componente conexo = 5
+Componentes conexos do grafo = {0: [5, 2, 3, 4, 1], 1: [7, 6], 2: [9, 8]}
+Quantidade de componentes do grafo = 3
+Menor componente conexo = 2
+Maior componente conexo = 5
+Componentes conexos do grafo = {0: [5, 2, 3, 4, 1], 1: [7, 6], 2: [9, 8]}

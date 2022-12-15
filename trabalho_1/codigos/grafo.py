@@ -1,105 +1,105 @@
 # import numpy as np
 # https://www.ime.usp.br/~pf/algoritmos_para_grafos/aulas/components.html#:~:text=Uma%20componente%20conexa%20(%3D%20connected,subgrafo%20conexo%20maximal%20do%20grafo.
 class Grafo:
-
     def __init__(self, input_file):
         self.read_file(input_file)
 
-    def dados(self):
-        print("Grafo = ",self.grafo)
-        print("Vertices = ", self.vertices)
+    # número de vértices, número de arestas, grau de cada vértice.
+    def dados(self, nome_arq):
+        arq = open(nome_arq, "a")
+        arq.write('Numero de vertices do grafo = ' + str(self.vertices)  + '\n')
         arestas =  sum([len(self.grafo[i]) for i in self.grafo])
-        print("Arestas = ", arestas//2)
+        arq.write('Numero de arestas do grafo = ' + str(arestas//2)  + '\n')
         #grau vertices
         for i in self.grafo:
             qtd = len(self.grafo[i])
             for j in self.grafo:
                 if i in self.grafo[j] and j not in self.grafo[i]:
                     qtd += 1
-            print("Grau do vertice ", i, " = ", qtd)
+            arq.write('Grau do vertice'+ str(i) + ' = ' + str(qtd)+ '\n')
+        arq.close()
 
-    def conexo(self):
+    def conexo(self, nome_arq):
         self.cc = [] 
-        visitados = self.dfs(1)
+        visitados = self.dfs(1, False)
         if len(visitados) == self.vertices:
-            print("Grafo conexo")
+            # print("Grafo conexo")
+            self.componentes_conexos(self.grafo, True, nome_arq)
         else:
-            print("Grafo desconexo")
-            # grafot = [[1,2], [2,5], [3,5], [4,5], [5,1], [6,7], [8,9]]
-            self.componentes_conexos( self.grafo)
-            # chama a função
-     
-    def componentes_conexos(self, grafo):
+            # print("Grafo desconexo")
+            self.componentes_conexos(self.grafo, False, nome_arq)
+
+    def componentes_conexos(self, grafo, isconexo, nome_arq):
         id = 0
-        self.dic_grafo = {}
+        dic_grafo = {}
         aux_grafo = grafo
         aux = False
+        arq = open(nome_arq, "a")
+        print('grafo correto = ', self.grafo)
+        print('aux_grafo correto = ', aux_grafo)
 
-        for j in grafo:    
-            # primeiro item
-            if(len(self.dic_grafo) == 0):
-                self.dic_grafo[id] = aux_grafo[j]
-                self.dic_grafo[id].insert(0, j)
-                id =+ 1
-                aux = True
-            else:
-                for i in self.dic_grafo:
-                    if(j in self.dic_grafo[i]):
-                        self.dic_grafo[i] = aux_grafo[j]
-                        self.dic_grafo[i].insert(0, j)
-                    else:
-                        print('aux_grafo[j] = ', aux_grafo[j] )
-                        for x in aux_grafo[j]:
-                            if(x in self.dic_grafo[i]):
-                                print('Está dentro da lista \o/')
-                                self.dic_grafo[i].insert(0, j)
-                                break
-                            else:
-                                aux = True
-                        
-                        if(aux == True):
-                            self.dic_grafo[id] = aux_grafo[j]
-                            # self.dic_grafo[id].insert(0, j)
-                            # id =+ 1
-                            print('aux_grafo[j] == ', aux_grafo[j] )
-                            print('aux == True')
+        if (isconexo == True):
+            for i in grafo:
+                if(len(dic_grafo) == 0):
+                    dic_grafo[0] = grafo[i]
+                else: 
+                    for j in grafo[i]:
+                        if( j not in dic_grafo[0]):
+                            dic_grafo[0].insert(0,j)
+            
+            min_max = len(dic_grafo[0])
+            arq.write("Quantidade de componentes do grafo = 1\n")
+            arq.write('Menor componente conexo = ' + str(min_max) + '\n' + 'Maior componente conexo = ' +  str(min_max) + '\n')
+            arq.write('Componentes conexos do grafo = ' + str(dic_grafo)  + '\n')
+            arq.close()
+            dic_grafo.clear()
+        else:
+            for j in grafo:    
+                # primeiro item
+                if(len(dic_grafo) == 0):
+                    dic_grafo[id] = aux_grafo[j]
+                    dic_grafo[id].insert(0, j)
+                else:
+                    for i in dic_grafo:
+                        if(j in dic_grafo[id]):
+                            dic_grafo[id] = aux_grafo[j]
+                            if(j not in dic_grafo[id]):
+                                dic_grafo[id].insert(0, j)
+                        else:
+                            # se estiver na lista
+                            for x in aux_grafo[j]:
+                                if(x in dic_grafo[id]):
+                                    dic_grafo[i].insert(0, j)
+                                    break
+                                else:
+                                    aux = True
+                                    break
+                            
+                    if(aux == True):
+                        id += 1
+                        dic_grafo[id] = aux_grafo[j]
+                        dic_grafo[id].insert(0, j)
+                        aux = False
 
-                       
+            # Abrindo o arquivo para gravação 
+            arq.write("Quantidade de componentes do grafo = " +str(max(dic_grafo.keys()) + 1)+"\n")
 
-                # se um elemento do grafo[i] estiver no dic_graf ele é apagado do aux_grafo
-                # for i in range(j ,len(grafo)+1):
-                #if(grafo[j])
+            max_value = 0
+            min_value = 0
+            for i in dic_grafo:
+                if(len(dic_grafo[i]) >= max_value):
+                    max_value = len(dic_grafo[i])
+                else:
+                    aux_min = len(dic_grafo[i])
+                    if(aux >= min_value):
+                        min_value = aux_min
 
-            print('j = ', j)
-            print('aux_grafo = ', aux_grafo)
-            print('self.dic_grafo = ', self.dic_grafo)
-            print('id = ', id)
-            # print('len = ',len(self.dic_grafo))
-        
-       
-        # for i in range(0, len(grafo)):
-        #    # self.cc[i].append(-1)
-        #    self.cc.insert(i, -1) 
-        # for j in range(0, len(grafo)):
-        #     if(self.cc[j] == -1):
-        #         print('algo = ', self.grafo)
+            arq.write('Menor componente conexo = ' + str(min_value) + '\n' + 'Maior componente conexo = ' + str(max_value) + '\n')
+            arq.write('Componentes conexos do grafo = ' + str(dic_grafo)  + '\n')
+            arq.close()
+        print('grafo = ', self.grafo)
 
-        #         # atribui o número id a todos os vértices que estão na mesma componente conexa que v. A função supõe que o grafo G é representado por listas de adjacência. 
-
-        #         self.add_id_componentes_conexos(self.grafo, j, id+1)
-
-        # print('id = ', id)
-        # print('self.cc = ', self.cc)
-
-    def add_id_componentes_conexos(self, grafo, v, id):
-        self.cc[v] = id
-        # for i in range():
-
-              
-
-    def teste(self,vertice):
-        print(self.grafo[vertice])
-
+    # busca em largura 
     def bfs(self, vertice):
         queue  = [vertice]
         visitados = []
@@ -120,8 +120,8 @@ class Grafo:
         print(visitados)
         return visitados
 
-
-    def dfs(self, vertice):
+    # busca em profundidade
+    def dfs(self, vertice, write_arq):
         visitados = []
         stack = [vertice]
         level = {}
@@ -130,15 +130,23 @@ class Grafo:
         while stack:
             vertice = stack.pop()
             if vertice not in visitados:
-                print("Vertice: ", vertice, " Nivel: ", level[vertice])
+                if(write_arq ==  True):
+                    print("Vertice: ", vertice, " Nivel: ", level[vertice])
                 visitados.append(vertice)
                 
                 for i in self.grafo[vertice]:
                     if i not in visitados:
                         stack.append(i)
                         level[i] = level[vertice] + 1
-        print(visitados)
+        if(write_arq ==  True):
+            print(visitados)
         return visitados
+
+    def imprime_lista_de_adjacência(self, nome_arq):
+        arq = open(nome_arq, "a")
+        arq.write('Lista de adjacência = ' + str(self.grafo)  + '\n')
+        arq.close()
+
 
     def read_file(self, input_file):
         input = open(input_file, "r")
@@ -155,12 +163,19 @@ class Grafo:
                 self.grafo = { i: [] for i in range(1 , self.vertices+1) }
                 pass
 
+#if __name__ == "__main__":
+    # programa de teste
+    # nome_arq = "componentes_do_grafo_as_graph.txt"
+    # nome_arq = "componentes_do_grafooooo.txt"
+nome_arq = "blabla.txt"
+    # g = Grafo("../collaboration_graph.txt")
 g = Grafo("../teste2.txt")
-#g = Grafo("../collaboration_graph.txt")
-#g = Grafo("../as_graph.txt")
-g.dados()
-# print("BFS")
-# g.bfs(1)
-# print("DFS")
-# g.dfs(1)
-g.conexo()
+    # g = Grafo("../as_graph.txt")
+    # g.dados()
+    # print("BFS")
+    # g.bfs(1)
+    # print("DFS")
+    # g.dfs(1)
+g.conexo(nome_arq)
+#g.dados(nome_arq)
+
