@@ -11,12 +11,10 @@ while True:
     nome_arq = input('Digite o nome do arquivo de entrada .txt que deve estar localizado dentro da pasta "trabalho1" (Ex: teste.txt) \n')
     Rep_grafos = int(input('Escolha a representação a ser utilizada\n1 - Matriz de adjacência\n2 - Lista de adjacência\n0 - Sair\n'))
 
-    # Grafo.teste("../"+ nome_arq)
-    # Grafo.dados("../"+ nome_arq)
-
+    
     g = Grafo("../"+ nome_arq)
+    # numero de vertices, numero de arestas e o grau de cada vertice
     g.dados("../res_"+ nome_arq)
-    g.conexo("../componentes_conexos_"+ nome_arq)
    
     # Matriz de adjacência
     if Rep_grafos == 1:
@@ -30,5 +28,8 @@ while True:
         break
     else:
         print('\nOpção inválida!!\nTente novamente.')
+
+    # numero de componentes conexas o tamanho (em vertices?) de cada componente e a lista de vertices pertencentes ao componente
+    g.conexo("../componentes_conexos_"+ nome_arq)
      
-    print(f'\n*****Saída do programa*****\n1 - res_{nome_arq} retornou o numero de vertices, numero de arestas e o grau de cada vertice.\n2 - componentes_conexos_{nome_arq} retornou o numero de componentes conexas o tamanho (em vertices?) de cada componente e a lista de vertices pertencentes a componente....')
+    print(f'\n*****Saída do programa*****\n1 - res_{nome_arq} retornou o numero de vertices, numero de arestas e o grau de cada vertice.\n2 - componentes_conexos_{nome_arq} retornou o numero de componentes conexas o tamanho (em vertices?) de cada componente e a lista de vertices pertencentes ao componente....')

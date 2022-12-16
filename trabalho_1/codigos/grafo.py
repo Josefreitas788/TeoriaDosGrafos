@@ -29,19 +29,22 @@ class Grafo:
             # print("Grafo desconexo")
             self.componentes_conexos(self.grafo, False, nome_arq)
 
+    # mudando o self.grafo
     def componentes_conexos(self, grafo, isconexo, nome_arq):
         id = 0
         dic_grafo = {}
-        aux_grafo = grafo
+        # aux_grafo = grafo
+        aux_grafo = {}
+        aux_grafo.update(grafo)
         aux = False
         arq = open(nome_arq, "a")
-        print('grafo correto = ', self.grafo)
-        print('aux_grafo correto = ', aux_grafo)
-
+        # print('grafo correto = ', self.grafo)
+        
         if (isconexo == True):
             for i in grafo:
                 if(len(dic_grafo) == 0):
-                    dic_grafo[0] = grafo[i]
+                    dic_grafo[0].update(grafo[i])
+                    # dic_grafo[0] = grafo[i]
                 else: 
                     for j in grafo[i]:
                         if( j not in dic_grafo[0]):
@@ -54,11 +57,14 @@ class Grafo:
             arq.close()
             dic_grafo.clear()
         else:
+            # for i in dic_grafo:
             for j in grafo:    
                 # primeiro item
+
                 if(len(dic_grafo) == 0):
                     dic_grafo[id] = aux_grafo[j]
                     dic_grafo[id].insert(0, j)
+
                 else:
                     for i in dic_grafo:
                         if(j in dic_grafo[id]):
@@ -97,7 +103,7 @@ class Grafo:
             arq.write('Menor componente conexo = ' + str(min_value) + '\n' + 'Maior componente conexo = ' + str(max_value) + '\n')
             arq.write('Componentes conexos do grafo = ' + str(dic_grafo)  + '\n')
             arq.close()
-        print('grafo = ', self.grafo)
+        # print('grafo = ', grafo)
 
     # busca em largura 
     def bfs(self, vertice):
