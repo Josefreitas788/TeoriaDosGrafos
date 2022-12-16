@@ -1,4 +1,7 @@
+from memory_profiler import profile
+
 class GrafoAdjacente:
+    @profile
     def __init__(self, input_file):
         self.read_file(input_file)
         # self.write_matriz()
@@ -15,7 +18,7 @@ class GrafoAdjacente:
         # não é grafo direcionado 
         self.grafomatriz[u-1][v-1] = 1
         self.grafomatriz[v-1][u-1] = 1
-
+    
     def read_file(self, input_file):
         input = open(input_file, "r")
         lista = []
@@ -33,6 +36,9 @@ class GrafoAdjacente:
         #adicionando arestas
         for i in lista:
             self.inserir_aresta(int(i[0]),int(i[1]))
+
+if __name__ == "__main__":
+    grafo = GrafoAdjacente("../collaboration_graph.txt")
 
 # g = GrafoAdjacente("../teste.txt")
 # g = GrafoAdjacente("../teste2.txt")
