@@ -1,37 +1,42 @@
 # import numpy as np
 import time
 # https://www.ime.usp.br/~pf/algoritmos_para_grafos/aulas/components.html#:~:text=Uma%20componente%20conexa%20(%3D%20connected,subgrafo%20conexo%20maximal%20do%20grafo.
-from memory_profiler import profile
+#from memory_profiler import profile
 class Grafo:
 
     
     def __init__(self, input_file):
+
+        self.opcao = int(input("\nDigite o tipo de representação desejada:\n 1 - Lista de adjacência\n 2 - Matriz de adjacência\n"))
         self.read_file(input_file)
+        
 
     # número de vértices, número de arestas, grau de cada vértice.
     def dados(self, nome_arq):
-        arq = open(nome_arq, "a")
-        arq.write('Numero de vertices do grafo = ' + str(self.vertices)  + '\n')
-        arestas =  sum([len(self.grafo[i]) for i in self.grafo])
-        arq.write('Numero de arestas do grafo = ' + str(arestas//2)  + '\n')
-        #grau vertices
-        for i in self.grafo:
-            qtd = len(self.grafo[i])
-            for j in self.grafo:
-                if i in self.grafo[j] and j not in self.grafo[i]:
-                    qtd += 1
-            arq.write('Grau do vertice'+ str(i) + ' = ' + str(qtd)+ '\n')
-        arq.close()
+        if(self.opcao == '1'):
+            arq = open(nome_arq, "a")
+            arq.write('Numero de vertices do grafo = ' + str(self.vertices)  + '\n')
+            arestas =  sum([len(self.grafo[i]) for i in self.grafo])
+            arq.write('Numero de arestas do grafo = ' + str(arestas//2)  + '\n')
+            #grau vertices
+            for i in self.grafo:
+                qtd = len(self.grafo[i])
+                for j in self.grafo:
+                    if i in self.grafo[j] and j not in self.grafo[i]:
+                        qtd += 1
+                arq.write('Grau do vertice'+ str(i) + ' = ' + str(qtd)+ '\n')
+            arq.close()
 
     def conexo(self, nome_arq):
-        self.cc = [] 
-        visitados = self.dfs(1, False)
-        if len(visitados) == self.vertices:
-            # print("Grafo conexo")
-            self.componentes_conexos(self.grafo, True, nome_arq)
-        else:
-            # print("Grafo desconexo")
-            self.componentes_conexos(self.grafo, False, nome_arq)
+        if(self.opcao == '1'):
+            self.cc = [] 
+            visitados = self.dfs(1, False)
+            if len(visitados) == self.vertices:
+                # print("Grafo conexo")
+                self.componentes_conexos(self.grafo, True, nome_arq)
+            else:
+                # print("Grafo desconexo")
+                self.componentes_conexos(self.grafo, False, nome_arq)
 
     # mudando o self.grafo
     def componentes_conexos(self, grafo, isconexo, nome_arq):
@@ -158,30 +163,53 @@ class Grafo:
         arq.close()
 
 
-    @profile
+    #@profile
     def read_file(self, input_file):
+        
         input = open(input_file, "r")
-      
-        for line in input:
-            x = line.split(" ")
-            try:
-                x[1] = x[1].replace("\n", "")
-                self.grafo[int(x[0])].append(int(x[1]))
-                if int(x[0]) not in self.grafo[int(x[1])]:
-                    self.grafo[int(x[1])].append(int(x[0]))
-            except:
-                self.vertices = int(x[0])
-                self.grafo = { i: [] for i in range(1 , self.vertices+1) }
-                pass
+        if(self.opcao == '1'):
+            for line in input:
+                x = line.split(" ")
+                try:
+                    x[1] = x[1].replace("\n", "")
+                    self.grafo[int(x[0])].append(int(x[1]))
+                    if int(x[0]) not in self.grafo[int(x[1])]:
+                        self.grafo[int(x[1])].append(int(x[0]))
+                except:
+                    self.vertices = int(x[0])
+                    self.grafo = { i: [] for i in range(1 , self.vertices+1) }
+                    pass
+        
+        else:
+            lista = []
+            for line in input:
+                line = line.replace("\n", "")
+                x = line.split(" ")
+                lista.append(x)
+            
+            self.vertices = lista[0]
+            del lista[0]
+
+            # Criando a matriz com zeros 
+            self.grafomatriz = [[None for i in range(int(self.vertices[0]))] for j in range(int(self.vertices[0]))]
+            
+            #adicionando arestas
+            for i in lista:
+                self.inserir_aresta(int(i[0]),int(i[1]))
+                self.grafomatriz[i[0]][int(i[1])] = 1
+                self.grafomatriz[int(i[1])][int(i[0])] = 1
+            
+            print(self.grafomatriz)
+
 
 if __name__ == "__main__":
     # programa de teste
-    # nome_arq = "componentes_do_grafo_as_graph.txt"
+    #nome_arq = "componentes_do_grafo_as_graph.txt"
     # nome_arq = "componentes_do_grafooooo.txt"
     # g = Grafo("../teste2.txt")
 # nome_arq = "../componentes_conexos_as_graph.txt"
 # g = Grafo("../collaboration_graph.txt")
-# g = Grafo("../as_graph.txt")
+    g = Grafo("../as_graph.txt")
 
     # g.dados()
     # print("BFS")
