@@ -1,7 +1,10 @@
 # import numpy as np
 import time
 # https://www.ime.usp.br/~pf/algoritmos_para_grafos/aulas/components.html#:~:text=Uma%20componente%20conexa%20(%3D%20connected,subgrafo%20conexo%20maximal%20do%20grafo.
+from memory_profiler import profile
 class Grafo:
+
+    
     def __init__(self, input_file):
         self.read_file(input_file)
 
@@ -116,7 +119,6 @@ class Grafo:
         while queue:
             vertice = queue.pop(0)
             if vertice not in visitados:
-                print("Vertice: ", vertice, " Nivel: ", level[vertice])
                 visitados.append(vertice)
                 
                 for i in self.grafo[vertice] :
@@ -124,11 +126,13 @@ class Grafo:
                         level[i] = level[vertice] + 1
                         queue.append(i)
 
-        print(visitados)
-        return visitados
+        
+        arq = open("VerticesVisitados_BuscaEmLargura.txt", "a")
+        arq.write('Vertices visitados = ' + str(visitados)  + '\n')
+        arq.write('Nivel dos vertices = ' + str(level)  + '\n')
 
     # busca em profundidade
-    def dfs(self, vertice, write_arq):
+    def dfs(self, vertice):
         visitados = []
         stack = [vertice]
         level = {}
@@ -137,17 +141,16 @@ class Grafo:
         while stack:
             vertice = stack.pop()
             if vertice not in visitados:
-                if(write_arq ==  True):
-                    print("Vertice: ", vertice, " Nivel: ", level[vertice])
                 visitados.append(vertice)
                 
                 for i in self.grafo[vertice]:
                     if i not in visitados:
                         stack.append(i)
                         level[i] = level[vertice] + 1
-        if(write_arq ==  True):
-            print(visitados)
-        return visitados
+        
+        arq = open("VerticesVisitados_BuscaEmProfundidade.txt", "a")
+        arq.write('Vertices visitados = ' + str(visitados)  + '\n')
+        arq.write('Nivel dos vertices = ' + str(level)  + '\n')
 
     def imprime_lista_de_adjacência(self, nome_arq):
         arq = open(nome_arq, "a")
@@ -155,6 +158,7 @@ class Grafo:
         arq.close()
 
 
+    @profile
     def read_file(self, input_file):
         input = open(input_file, "r")
       
@@ -170,7 +174,7 @@ class Grafo:
                 self.grafo = { i: [] for i in range(1 , self.vertices+1) }
                 pass
 
-#if __name__ == "__main__":
+if __name__ == "__main__":
     # programa de teste
     # nome_arq = "componentes_do_grafo_as_graph.txt"
     # nome_arq = "componentes_do_grafooooo.txt"
