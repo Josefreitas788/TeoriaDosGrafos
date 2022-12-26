@@ -1,4 +1,5 @@
 # import numpy as np
+import time
 # https://www.ime.usp.br/~pf/algoritmos_para_grafos/aulas/components.html#:~:text=Uma%20componente%20conexa%20(%3D%20connected,subgrafo%20conexo%20maximal%20do%20grafo.
 class Grafo:
     def __init__(self, input_file):
@@ -43,8 +44,7 @@ class Grafo:
         if (isconexo == True):
             for i in grafo:
                 if(len(dic_grafo) == 0):
-                    dic_grafo[0].update(grafo[i])
-                    # dic_grafo[0] = grafo[i]
+                    dic_grafo[0] = grafo[i]
                 else: 
                     for j in grafo[i]:
                         if( j not in dic_grafo[0]):
@@ -107,6 +107,7 @@ class Grafo:
 
     # busca em largura 
     def bfs(self, vertice):
+
         queue  = [vertice]
         visitados = []
         level = {}
@@ -173,15 +174,25 @@ class Grafo:
     # programa de teste
     # nome_arq = "componentes_do_grafo_as_graph.txt"
     # nome_arq = "componentes_do_grafooooo.txt"
-nome_arq = "blabla.txt"
-    # g = Grafo("../collaboration_graph.txt")
-g = Grafo("../teste2.txt")
-    # g = Grafo("../as_graph.txt")
+    # g = Grafo("../teste2.txt")
+# nome_arq = "../componentes_conexos_as_graph.txt"
+# g = Grafo("../collaboration_graph.txt")
+# g = Grafo("../as_graph.txt")
+
     # g.dados()
     # print("BFS")
-    # g.bfs(1)
+####################################
+# start = time.perf_counter()
+
+# g.bfs(1)
+
+# end = time.perf_counter()
+# lista_time = []
+# lista_time.append(end - start)
+# print('lista_time = ', lista_time)
+####################################
     # print("DFS")
     # g.dfs(1)
-g.conexo(nome_arq)
+# g.conexo(nome_arq)
 #g.dados(nome_arq)
 
