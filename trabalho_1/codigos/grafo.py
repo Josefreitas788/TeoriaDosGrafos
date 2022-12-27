@@ -7,7 +7,7 @@ class Grafo:
     
     def __init__(self, input_file):
 
-        self.opcao = int(input("\nDigite o tipo de representação desejada:\n 1 - Lista de adjacência\n 2 - Matriz de adjacência\n"))
+        self.opcao = input("\nDigite o tipo de representação desejada:\n 1 - Lista de adjacência\n 2 - Matriz de adjacência\n")
         self.read_file(input_file)
         
 
@@ -162,6 +162,10 @@ class Grafo:
         arq.write('Lista de adjacência = ' + str(self.grafo)  + '\n')
         arq.close()
 
+    def dijkstra_lista_adjacencia(self, vertice_inicial, vertice_destino):
+        print('Dijkstra lista de adjacência')
+
+
 
     #@profile
     def read_file(self, input_file):
@@ -171,16 +175,28 @@ class Grafo:
             for line in input:
                 x = line.split(" ")
                 try:
-                    x[1] = x[1].replace("\n", "")
-                    self.grafo[int(x[0])].append(int(x[1]))
-                    if int(x[0]) not in self.grafo[int(x[1])]:
-                        self.grafo[int(x[1])].append(int(x[0]))
+                    #Se for uma grafo com peso vai executar esse bloco
+                    x[2] = x[2].replace("\n", "")
+                    self.grafo[int(x[0])].append([int(x[1]), float(x[2])])
+                    self.grafo[int(x[1])].append([int(x[0]), float(x[2])])
+                
+                    try:
+                        #se for um grafo sem peso vai executar esse bloco
+                        x[1] = x[1].replace("\n", "")
+                        self.grafo[int(x[0])].append(int(x[1]))
+                        if int(x[0]) not in self.grafo[int(x[1])]:
+                            
+                            self.grafo[int(x[1])].append(int(x[0]))
+                    
+                    except:
+                        #Esse bloco sempre vai ser executado na primeira linha do arquivo
+                        self.vertices = int(x[0])
+                        self.grafo = { i: [] for i in range(1 , self.vertices+1) }
+                        pass
                 except:
-                    self.vertices = int(x[0])
-                    self.grafo = { i: [] for i in range(1 , self.vertices+1) }
                     pass
         
-        else:
+        elif(self.opcao == '2'):
             lista = []
             for line in input:
                 line = line.replace("\n", "")
@@ -193,14 +209,20 @@ class Grafo:
             # Criando a matriz com zeros 
             self.grafomatriz = [[None for i in range(int(self.vertices[0]))] for j in range(int(self.vertices[0]))]
             
-            #adicionando arestas
-            for i in lista:
-                self.inserir_aresta(int(i[0]),int(i[1]))
-                self.grafomatriz[i[0]][int(i[1])] = 1
-                self.grafomatriz[int(i[1])][int(i[0])] = 1
+            try:
+                #adicionando arestas com pesos 
+                for i in lista:
+                    self.grafomatriz[i[0]][int(i[1])] = float(i[2])
+                    self.grafomatriz[int(i[1])][int(i[0])] = float(i[2])
+
+            except:
+                #adicionando arestas
+                for i in lista:
+                    self.grafomatriz[i[0]][int(i[1])] = 1
+                    self.grafomatriz[int(i[1])][int(i[0])] = 1
+
             
             print(self.grafomatriz)
-
 
 if __name__ == "__main__":
     # programa de teste
@@ -209,7 +231,7 @@ if __name__ == "__main__":
     # g = Grafo("../teste2.txt")
 # nome_arq = "../componentes_conexos_as_graph.txt"
 # g = Grafo("../collaboration_graph.txt")
-    g = Grafo("../as_graph.txt")
+    g = Grafo("../grafos/as_graph.txt")
 
     # g.dados()
     # print("BFS")
