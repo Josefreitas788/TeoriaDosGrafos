@@ -1,4 +1,5 @@
-# import numpy as np
+import numpy as np 
+from scipy.sparse import csr_matrix
 import time
 # https://www.ime.usp.br/~pf/algoritmos_para_grafos/aulas/components.html#:~:text=Uma%20componente%20conexa%20(%3D%20connected,subgrafo%20conexo%20maximal%20do%20grafo.
 #from memory_profiler import profile
@@ -12,9 +13,9 @@ class Grafo:
         
 
     # número de vértices, número de arestas, grau de cada vértice.
-    def dados(self, nome_arq):
+    def dados(self):
         if(self.opcao == '1'):
-            arq = open(nome_arq, "a")
+            arq = open("../outputs/dados_grafo_lista.txt", "a")
             arq.write('Numero de vertices do grafo = ' + str(self.vertices)  + '\n')
             arestas =  sum([len(self.grafo[i]) for i in self.grafo])
             arq.write('Numero de arestas do grafo = ' + str(arestas//2)  + '\n')
@@ -23,6 +24,19 @@ class Grafo:
                 qtd = len(self.grafo[i])
                 for j in self.grafo:
                     if i in self.grafo[j] and j not in self.grafo[i]:
+                        qtd += 1
+                arq.write('Grau do vertice'+ str(i) + ' = ' + str(qtd)+ '\n')
+            arq.close()
+        if(self.opcao == '2'):
+            arq = open("../outputs/dados_grafo_matriz.txt", "a")
+            arq.write('Numero de vertices do grafo = ' + str(self.vertices[0])  + '\n')
+            arestas =  sum([len(self.grafo[i]) for i in self.grafo])
+            arq.write('Numero de arestas do grafo = ' + str(arestas//2)  + '\n')
+            #grau vertices
+            for i in range((int(self.vertices[0]))):
+                qtd = 0
+                for j in range((int(self.vertices[0]))):
+                    if self.grafo[i][j] == 1:
                         qtd += 1
                 arq.write('Grau do vertice'+ str(i) + ' = ' + str(qtd)+ '\n')
             arq.close()
@@ -116,46 +130,87 @@ class Grafo:
     # busca em largura 
     def bfs(self, vertice):
 
-        queue  = [vertice]
-        visitados = []
-        level = {}
-        level[vertice] = 0
+        if(self.opcao == '1'):
+            queue  = [vertice]
+            visitados = []
+            level = {}
+            level[vertice] = 0
 
-        while queue:
-            vertice = queue.pop(0)
-            if vertice not in visitados:
-                visitados.append(vertice)
-                
-                for i in self.grafo[vertice] :
-                    if i not in visitados:
-                        level[i] = level[vertice] + 1
-                        queue.append(i)
+            while queue:
+                vertice = queue.pop(0)
+                if vertice not in visitados:
+                    visitados.append(vertice)
+                    
+                    for i in self.grafo[vertice] :
+                        if i not in visitados:
+                            level[i] = level[vertice] + 1
+                            queue.append(i)
 
-        
-        arq = open("VerticesVisitados_BuscaEmLargura.txt", "a")
-        arq.write('Vertices visitados = ' + str(visitados)  + '\n')
-        arq.write('Nivel dos vertices = ' + str(level)  + '\n')
+            
+            arq = open("../outputs/VerticesVisitados_BuscaEmLargura.txt", "a")
+            arq.write('Vertices visitados = ' + str(visitados)  + '\n')
+            arq.write('Nivel dos vertices = ' + str(level)  + '\n')
 
-    # busca em profundidade
+        if(self.opcao == '2'):
+            #bsf para Matriz
+            queue  = [vertice-1]
+            visitados = []
+            level = {}
+            level[vertice] = 0
+
+            while queue:
+                vertice = queue.pop(0)
+                if vertice+1 not in visitados:
+                    visitados.append(vertice+1)
+                    
+                    for i in range(int(self.vertices[0])):
+                        if self.grafo[vertice][i] == 1 and i+1 not in visitados:
+                            level[i+1] = level[vertice+1] + 1
+                            queue.append(i)
+            arq = open("../outputs/VerticesVisitados_BuscaEmLarguraMatriz.txt", "a")
+            arq.write('Vertices visitados = ' + str(visitados)  + '\n')
+            arq.write('Nivel dos vertices = ' + str(level)  + '\n')
+            # busca em profundidade
     def dfs(self, vertice):
-        visitados = []
-        stack = [vertice]
-        level = {}
-        level[vertice] = 0
-        
-        while stack:
-            vertice = stack.pop()
-            if vertice not in visitados:
-                visitados.append(vertice)
-                
-                for i in self.grafo[vertice]:
-                    if i not in visitados:
-                        stack.append(i)
-                        level[i] = level[vertice] + 1
-        
-        arq = open("VerticesVisitados_BuscaEmProfundidade.txt", "a")
-        arq.write('Vertices visitados = ' + str(visitados)  + '\n')
-        arq.write('Nivel dos vertices = ' + str(level)  + '\n')
+        if(self.opcao == '1'):
+            visitados = []
+            stack = [vertice]
+            level = {}
+            level[vertice] = 0
+            
+            while stack:
+                vertice = stack.pop()
+                if vertice not in visitados:
+                    visitados.append(vertice)
+                    
+                    for i in self.grafo[vertice]:
+                        if i not in visitados:
+                            stack.append(i)
+                            level[i] = level[vertice] + 1
+            
+            arq = open("../outputs/VerticesVisitados_BuscaEmProfundidade.txt", "a")
+            arq.write('Vertices visitados = ' + str(visitados)  + '\n')
+            arq.write('Nivel dos vertices = ' + str(level)  + '\n')
+        if(self.opcao == '2'):
+            #dfs para Matriz
+            visitados = []
+            stack = [vertice-1]
+            level = {}
+            level[vertice] = 0
+            
+            while stack:
+                vertice = stack.pop()
+                if vertice+1 not in visitados:
+                    visitados.append(vertice+1)
+                    
+                    for i in range(int(self.vertices[0])):
+                        if self.grafo[vertice][i] == 1 and i+1 not in visitados:
+                            stack.append(i)
+                            level[i+1] = level[vertice+1] + 1
+            
+            arq = open("../outputs/VerticesVisitados_BuscaEmProfundidadeMatriz.txt", "a")
+            arq.write('Vertices visitados = ' + str(visitados)  + '\n')
+            arq.write('Nivel dos vertices = ' + str(level)  + '\n')
 
     def imprime_lista_de_adjacência(self, nome_arq):
         arq = open(nome_arq, "a")
@@ -173,28 +228,29 @@ class Grafo:
         input = open(input_file, "r")
         if(self.opcao == '1'):
             for line in input:
+                line = line.replace("\n", "")
                 x = line.split(" ")
+                
+
+
                 try:
-                    #Se for uma grafo com peso vai executar esse bloco
-                    x[2] = x[2].replace("\n", "")
-                    self.grafo[int(x[0])].append([int(x[1]), float(x[2])])
-                    self.grafo[int(x[1])].append([int(x[0]), float(x[2])])
+                    #se for um grafo sem peso vai executar esse bloco
+                    self.grafo[int(x[0])].append(int(x[1]))
+                    #if int(x[0]) not in self.grafo[int(x[1])]:
+                    self.grafo[int(x[1])].append(int(x[0]))
                 
                     try:
-                        #se for um grafo sem peso vai executar esse bloco
-                        x[1] = x[1].replace("\n", "")
-                        self.grafo[int(x[0])].append(int(x[1]))
-                        if int(x[0]) not in self.grafo[int(x[1])]:
-                            
-                            self.grafo[int(x[1])].append(int(x[0]))
-                    
+                        #Se for uma grafo com peso vai executar esse bloco
+                        self.grafo[int(x[0])].append([int(x[1]), float(x[2])])
+                        self.grafo[int(x[1])].append([int(x[0]), float(x[2])])
                     except:
-                        #Esse bloco sempre vai ser executado na primeira linha do arquivo
-                        self.vertices = int(x[0])
-                        self.grafo = { i: [] for i in range(1 , self.vertices+1) }
                         pass
                 except:
+                    #Esse bloco sempre vai ser executado na primeira linha do arquivo
+                    self.vertices = int(x[0])
+                    self.grafo = { i: [] for i in range(1 , self.vertices+1) }
                     pass
+            print('Grafo = ', self.grafo)
         
         elif(self.opcao == '2'):
             lista = []
@@ -207,32 +263,35 @@ class Grafo:
             del lista[0]
 
             # Criando a matriz com zeros 
-            self.grafomatriz = [[None for x in range(int(self.vertices[0])+1)] for y in range(int(self.vertices[0])+1)]
+            self.grafo = csr_matrix((int(self.vertices[0]), int(self.vertices[0])), dtype = np.int8).toarray() 
+            #[[None for x in range(int(self.vertices[0])+1)] for y in range(int(self.vertices[0])+1)]
             
             try:
                 #adicionando arestas com pesos 
                 for i in lista:
-                    self.grafomatriz[int(i[0])][int(i[1])] = float(i[2])
-                    #self.grafomatriz[int(i[1])][int(i[0])] = float(i[2])
+                    self.grafo[int(i[0])-1][int(i[1])-1] = float(i[2])
+                    self.grafo[int(i[1])-1][int(i[0])-1] = float(i[2])
             except:
                 #adicionando arestas
                 for i in lista:
-                    self.grafomatriz[int(i[0])][int(i[1])] = 1 
-                    #self.grafomatriz[int(i[1])][int(i[0])] = 1
+                    self.grafo[int(i[0])-1][int(i[1])-1] = 1 
+                    self.grafo[int(i[1])-1][int(i[0])-1] = 1
                     
-            print(self.grafomatriz)
+            print(self.grafo)
 
 if __name__ == "__main__":
     # programa de teste
     #nome_arq = "componentes_do_grafo_as_graph.txt"
     # nome_arq = "componentes_do_grafooooo.txt"
-    # g = Grafo("../teste2.txt")
+    g = Grafo("../grafos/teste2.txt")
+    g.bfs(1)
+    g.dfs(1)
 # nome_arq = "../componentes_conexos_as_graph.txt"
 # g = Grafo("../collaboration_graph.txt")
     #g = Grafo("../grafos/as_graph.txt")
-    g = Grafo("../grafos/trab2grafo_1.txt")
+    #g = Grafo("../grafos/trab2grafo_1.txt")
 
-    # g.dados()
+    g.dados()
     # print("BFS")
 ####################################
 # start = time.perf_counter()

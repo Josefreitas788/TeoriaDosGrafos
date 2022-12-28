@@ -1,0 +1,12 @@
+Numero de vertices do grafo = 9
+Numero de vertices do grafo = 9
+Numero de arestas do grafo = 40
+Grau do vertice0 = 2
+Grau do vertice1 = 2
+Grau do vertice2 = 1
+Grau do vertice3 = 1
+Grau do vertice4 = 4
+Grau do vertice5 = 1
+Grau do vertice6 = 1
+Grau do vertice7 = 1
+Grau do vertice8 = 1
