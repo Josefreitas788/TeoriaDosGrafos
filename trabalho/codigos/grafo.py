@@ -207,21 +207,19 @@ class Grafo:
             del lista[0]
 
             # Criando a matriz com zeros 
-            self.grafomatriz = [[None for i in range(int(self.vertices[0]))] for j in range(int(self.vertices[0]))]
+            self.grafomatriz = [[None for x in range(int(self.vertices[0])+1)] for y in range(int(self.vertices[0])+1)]
             
             try:
                 #adicionando arestas com pesos 
                 for i in lista:
-                    self.grafomatriz[i[0]][int(i[1])] = float(i[2])
-                    self.grafomatriz[int(i[1])][int(i[0])] = float(i[2])
-
+                    self.grafomatriz[int(i[0])][int(i[1])] = float(i[2])
+                    #self.grafomatriz[int(i[1])][int(i[0])] = float(i[2])
             except:
                 #adicionando arestas
                 for i in lista:
-                    self.grafomatriz[i[0]][int(i[1])] = 1
-                    self.grafomatriz[int(i[1])][int(i[0])] = 1
-
-            
+                    self.grafomatriz[int(i[0])][int(i[1])] = 1 
+                    #self.grafomatriz[int(i[1])][int(i[0])] = 1
+                    
             print(self.grafomatriz)
 
 if __name__ == "__main__":
@@ -231,7 +229,8 @@ if __name__ == "__main__":
     # g = Grafo("../teste2.txt")
 # nome_arq = "../componentes_conexos_as_graph.txt"
 # g = Grafo("../collaboration_graph.txt")
-    g = Grafo("../grafos/as_graph.txt")
+    #g = Grafo("../grafos/as_graph.txt")
+    g = Grafo("../grafos/trab2grafo_1.txt")
 
     # g.dados()
     # print("BFS")
