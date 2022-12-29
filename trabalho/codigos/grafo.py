@@ -28,9 +28,14 @@ class Grafo:
                 arq.write('Grau do vertice'+ str(i) + ' = ' + str(qtd)+ '\n')
             arq.close()
         if(self.opcao == '2'):
+            arestas = 0
             arq = open("../outputs/dados_grafo_matriz.txt", "a")
             arq.write('Numero de vertices do grafo = ' + str(self.vertices[0])  + '\n')
-            arestas =  sum([len(self.grafo[i]) for i in self.grafo])
+            for i in range(int(self.vertices[0])):
+                for j in range(int(self.vertices[0])):
+                    if self.grafo[i][j] != 0:
+                        arestas += 1
+
             arq.write('Numero de arestas do grafo = ' + str(arestas//2)  + '\n')
             #grau vertices
             for i in range((int(self.vertices[0]))):
@@ -42,9 +47,8 @@ class Grafo:
             arq.close()
 
     def conexo(self, nome_arq):
-        if(self.opcao == '1'):
             self.cc = [] 
-            visitados = self.dfs(1, False)
+            visitados = self.bfs(1, False)
             if len(visitados) == self.vertices:
                 # print("Grafo conexo")
                 self.componentes_conexos(self.grafo, True, nome_arq)
@@ -62,73 +66,85 @@ class Grafo:
         aux = False
         arq = open(nome_arq, "a")
         # print('grafo correto = ', self.grafo)
-        
-        if (isconexo == True):
-            for i in grafo:
-                if(len(dic_grafo) == 0):
-                    dic_grafo[0] = grafo[i]
-                else: 
-                    for j in grafo[i]:
-                        if( j not in dic_grafo[0]):
-                            dic_grafo[0].insert(0,j)
-            
-            min_max = len(dic_grafo[0])
-            arq.write("Quantidade de componentes do grafo = 1\n")
-            arq.write('Menor componente conexo = ' + str(min_max) + '\n' + 'Maior componente conexo = ' +  str(min_max) + '\n')
-            arq.write('Componentes conexos do grafo = ' + str(dic_grafo)  + '\n')
-            arq.close()
-            dic_grafo.clear()
-        else:
-            # for i in dic_grafo:
-            for j in grafo:    
-                # primeiro item
+        if(self.opcao == '1'):
 
-                if(len(dic_grafo) == 0):
-                    dic_grafo[id] = aux_grafo[j]
-                    dic_grafo[id].insert(0, j)
+            if (isconexo == True):
+                for i in grafo:
+                    if(len(dic_grafo) == 0):
+                        dic_grafo[0] = grafo[i]
+                    else: 
+                        for j in grafo[i]:
+                            if( j not in dic_grafo[0]):
+                                dic_grafo[0].insert(0,j)
+                
+                min_max = len(dic_grafo[0])
+                arq.write("Quantidade de componentes do grafo = 1\n")
+                arq.write('Menor componente conexo = ' + str(min_max) + '\n' + 'Maior componente conexo = ' +  str(min_max) + '\n')
+                arq.write('Componentes conexos do grafo = ' + str(dic_grafo)  + '\n')
+                arq.close()
+                dic_grafo.clear()
+            else:
+                # for i in dic_grafo:
+                for j in grafo:    
+                    # primeiro item
 
-                else:
-                    for i in dic_grafo:
-                        if(j in dic_grafo[id]):
-                            dic_grafo[id] = aux_grafo[j]
-                            if(j not in dic_grafo[id]):
-                                dic_grafo[id].insert(0, j)
-                        else:
-                            # se estiver na lista
-                            for x in aux_grafo[j]:
-                                if(x in dic_grafo[id]):
-                                    dic_grafo[i].insert(0, j)
-                                    break
-                                else:
-                                    aux = True
-                                    break
-                            
-                    if(aux == True):
-                        id += 1
+                    if(len(dic_grafo) == 0):
                         dic_grafo[id] = aux_grafo[j]
                         dic_grafo[id].insert(0, j)
-                        aux = False
 
-            # Abrindo o arquivo para gravação 
-            arq.write("Quantidade de componentes do grafo = " +str(max(dic_grafo.keys()) + 1)+"\n")
+                    else:
+                        for i in dic_grafo:
+                            if(j in dic_grafo[id]):
+                                dic_grafo[id] = aux_grafo[j]
+                                if(j not in dic_grafo[id]):
+                                    dic_grafo[id].insert(0, j)
+                            else:
+                                # se estiver na lista
+                                for x in aux_grafo[j]:
+                                    if(x in dic_grafo[id]):
+                                        dic_grafo[i].insert(0, j)
+                                        break
+                                    else:
+                                        aux = True
+                                        break
+                                
+                        if(aux == True):
+                            id += 1
+                            dic_grafo[id] = aux_grafo[j]
+                            dic_grafo[id].insert(0, j)
+                            aux = False
 
-            max_value = 0
-            min_value = 0
-            for i in dic_grafo:
-                if(len(dic_grafo[i]) >= max_value):
-                    max_value = len(dic_grafo[i])
-                else:
-                    aux_min = len(dic_grafo[i])
-                    if(aux >= min_value):
-                        min_value = aux_min
+                # Abrindo o arquivo para gravação 
+                arq.write("Quantidade de componentes do grafo = " +str(max(dic_grafo.keys()) + 1)+"\n")
 
-            arq.write('Menor componente conexo = ' + str(min_value) + '\n' + 'Maior componente conexo = ' + str(max_value) + '\n')
-            arq.write('Componentes conexos do grafo = ' + str(dic_grafo)  + '\n')
-            arq.close()
-        # print('grafo = ', grafo)
+                max_value = 0
+                min_value = 0
+                for i in dic_grafo:
+                    if(len(dic_grafo[i]) >= max_value):
+                        max_value = len(dic_grafo[i])
+                    else:
+                        aux_min = len(dic_grafo[i])
+                        if(aux >= min_value):
+                            min_value = aux_min
 
+                arq.write('Menor componente conexo = ' + str(min_value) + '\n' + 'Maior componente conexo = ' + str(max_value) + '\n')
+                arq.write('Componentes conexos do grafo = ' + str(dic_grafo)  + '\n')
+                arq.close()
+            # print('grafo = ', grafo)
+        if(self.opcao == '2'):
+            if (isconexo == True):
+                componentes = self.bfs(1, False)
+
+                arq.write('Menor componente conexo = ' + min(componentes) + '\n' + 'Maior componente conexo = ' + max(componentes) + '\n')
+                arq.write('Componentes conexos do grafo = ' + len(componentes)  + '\n')
+                arq.close()
+            else:
+                for i in range(self.vertices[0]):
+                    if i not in visitados:
+                        componentes = self.bfs(i, False)
+                        #TODO: IMPRIMIR OS COMPONENTES CONEXOS, O MENOR,O MAIOR E A QUANTIDADE DE COMPONENTES CONEXOS
     # busca em largura 
-    def bfs(self, vertice):
+    def bfs(self, vertice, returnTxt, verticeParada = None):
 
         if(self.opcao == '1'):
             queue  = [vertice]
@@ -140,16 +156,22 @@ class Grafo:
                 vertice = queue.pop(0)
                 if vertice not in visitados:
                     visitados.append(vertice)
+
+                    if verticeParada != None:
+                        if vertice == verticeParada:
+                            return visitados
                     
                     for i in self.grafo[vertice] :
                         if i not in visitados:
                             level[i] = level[vertice] + 1
                             queue.append(i)
 
-            
-            arq = open("../outputs/VerticesVisitados_BuscaEmLargura.txt", "a")
-            arq.write('Vertices visitados = ' + str(visitados)  + '\n')
-            arq.write('Nivel dos vertices = ' + str(level)  + '\n')
+            if(returnTxt == True):
+                arq = open("../outputs/VerticesVisitados_BuscaEmLargura.txt", "a")
+                arq.write('Vertices visitados = ' + str(visitados)  + '\n')
+                arq.write('Nivel dos vertices = ' + str(level)  + '\n')
+            else:
+                return visitados
 
         if(self.opcao == '2'):
             #bsf para Matriz
@@ -167,9 +189,13 @@ class Grafo:
                         if self.grafo[vertice][i] == 1 and i+1 not in visitados:
                             level[i+1] = level[vertice+1] + 1
                             queue.append(i)
-            arq = open("../outputs/VerticesVisitados_BuscaEmLarguraMatriz.txt", "a")
-            arq.write('Vertices visitados = ' + str(visitados)  + '\n')
-            arq.write('Nivel dos vertices = ' + str(level)  + '\n')
+            if(returnTxt == True):
+                arq = open("../outputs/VerticesVisitados_BuscaEmLarguraMatriz.txt", "a")
+                arq.write('Vertices visitados = ' + str(visitados)  + '\n')
+                arq.write('Nivel dos vertices = ' + str(level)  + '\n')
+            else:
+                return visitados
+
             # busca em profundidade
     def dfs(self, vertice):
         if(self.opcao == '1'):
@@ -219,6 +245,20 @@ class Grafo:
 
     def dijkstra_lista_adjacencia(self, vertice_inicial, vertice_destino):
         print('Dijkstra lista de adjacência')
+        menor_caminho = []
+        visitados = []
+        queue = [vertice_inicial]
+
+        try:
+            if(self.opcao == '1'):
+                while queue:
+                    vertice = queue.pop(0)
+                    if vertice not in visitados:
+                        visitados.append(vertice)
+                    
+        except:
+            #TODO: IMPLEMENTAR O VERTICE DE PARADA NO BFS
+            bfs = self.bfs(vertice_inicial, True, vertice_destino)
 
 
 
@@ -284,8 +324,8 @@ if __name__ == "__main__":
     #nome_arq = "componentes_do_grafo_as_graph.txt"
     # nome_arq = "componentes_do_grafooooo.txt"
     g = Grafo("../grafos/teste2.txt")
-    g.bfs(1)
-    g.dfs(1)
+    g.bfs(1,True)
+    g.dfs(1,True)
 # nome_arq = "../componentes_conexos_as_graph.txt"
 # g = Grafo("../collaboration_graph.txt")
     #g = Grafo("../grafos/as_graph.txt")
