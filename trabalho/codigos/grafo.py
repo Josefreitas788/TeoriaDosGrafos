@@ -406,6 +406,11 @@ class Grafo:
             # IMPLEMENTAR O VERTICE DE PARADA NO BFS
             bfs = self.bfs(vertice_inicial, True, vertice_destino)
 
+        if self.opcao == 2:
+            #dijkstra_Matriz
+            print("dijkstra_Matriz")
+            
+
 
 
     #@profile
@@ -416,21 +421,20 @@ class Grafo:
             for line in input:
                 line = line.replace("\n", "")
                 x = line.split(" ")
-                
+                selecionador = 0                
                 try:
-                    #se for um grafo sem peso vai executar esse bloco
-                    self.grafo[int(x[0])].append(int(x[1]))
-                    #if int(x[0]) not in self.grafo[int(x[1])]:
-                    self.grafo[int(x[1])].append(int(x[0]))
+                    #Se for uma grafo com peso vai executar esse bloco
+                    self.grafo[int(x[0])].append([int(x[1]), float(x[2])])
+                    # self.grafo[int(x[0])].append([float(x[2])])
+                    self.grafo[int(x[1])].append([int(x[0]), float(x[2])])
+                    # self.grafo[int(x[1])].append([float(x[2])])
+                    selecionador = 1
                 
-                    try:
-                        #Se for uma grafo com peso vai executar esse bloco
-                        self.grafo[int(x[0])].append([int(x[1]), float(x[2])])
-                        # self.grafo[int(x[0])].append([float(x[2])])
-                        self.grafo[int(x[1])].append([int(x[0]), float(x[2])])
-                        # self.grafo[int(x[1])].append([float(x[2])])
-                    except:
-                        pass
+                    if selecionador == 0:
+                        #se for um grafo sem peso vai executar esse bloco
+                        self.grafo[int(x[0])].append(int(x[1]))
+                        #if int(x[0]) not in self.grafo[int(x[1])]:
+                        self.grafo[int(x[1])].append(int(x[0]))
                 except:
                     #Esse bloco sempre vai ser executado na primeira linha do arquivo
                     self.vertices = int(x[0])
@@ -470,7 +474,7 @@ if __name__ == "__main__":
     #nome_arq = "componentes_do_grafo_as_graph.txt"
     # nome_arq = "componentes_do_grafooooo.txt"
 
-    # g = Grafo("../grafos/teste2.txt")
+    #g = Grafo("../grafos/teste2.txt")
     # g.bfs(1,True)
     # g.dfs(1,True)
 
@@ -497,5 +501,5 @@ if __name__ == "__main__":
 
 ############### dijkstra #####################
     g = Grafo("../grafos/teste2_dijkstra.txt")
-    g.dijkstra_lista_adjacencia(1, 3)
+    #g.dijkstra_lista_adjacencia(1, 3)
 ####################################
