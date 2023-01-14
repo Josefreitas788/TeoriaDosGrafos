@@ -285,137 +285,120 @@ class Grafo:
                 # menor_dist = visitados[-1]
                 menor_dist = None
                 menor = 0
+                menor_no = vertice_inicial #raiz 
+
                 while len(nao_visitados) != 0:
                     no_atual = visitados[-1]
-                    # menor_dist = None
-                    # menor_dist = grafo_copy[no_atual]
                     nos_adj = [] # nós adjacentes do nó atual
-                    print(f'\nNó atual = {no_atual}\n')
-                    for i in grafo_copy[no_atual]:
-                            if(type(i) == list ):
-                                
-                                # Analisaremos apenas os nós que são adjacentes aos nós que já fazem parte do caminho mais curto 
-                                if((i[0] in visitados) == True):
-                                    print(f'\entrou aqui ? | nó ad = {i} | MENOR DIST. = {menor_dist}\n')
-                                    menor_caminho = True # achou um menor caminho
-                                    print(f'achou um menor caminho = {i[0]} | {i}')
-                                    # nos_adj.append(i) #deve ir para o próximo nó
-                                    continue
-                                else:
-                                    print(f'\nENTROU AQUI\n')
-                                    print("distancia_caminho = ", distancia_caminho)
-                                    nos_adj.append(i) 
-                                    print(f'Nós adjacentes de {no_atual} = {nos_adj}')
-                                    
-                                    #### atualizando a lista de distancia ####
-                                    for c in distancia_caminho:
-                                        if(c[0] == i[0]): # if(nó == nó não visitado)
-                                            # adiciona a distancia em relaçao ao nó inicial
-                                            if(c[1] == None):
-                                                c[1] = 0
+                    print(f'visitados = {visitados}\nnao_visitados = {nao_visitados}')
+                    # print(f'\nNó atual = {no_atual}\n')
 
-                                            # Adicioná-lo ao caminho o nó mais próximo do nó de origem
-                                            print(f'menor_caminho = {menor_caminho} |  c[1] = { c[1] }')
-                                            # if (menor_caminho == True): 
-                                            
-                                            for caminho in distancia_caminho:
-                                                if (menor_caminho == True):
-                                                    if(caminho[0] == menor[0]):
-                                                        c[2].extend(caminho[2]) # caminho
-                                                        
-                                                        print(f'caminho[1] = {caminho} | c[1] = {c[1]} | menor  {menor} | i = {i}')
-                                                     
-                                                        print(f'\n ------ Nó atual/i[0]= {i[0] }\ngrafo_copy = {grafo_copy[i[0]]}')
-                                                        #pegar o no grafo_copy[i[0]] o valor correto de c[1]
-                                                        
-                                                        # c[1] = c[1] + caminho[1] # peso
-                                                       
-                                                        print(f'menor[0] = {menor}\n grafo_copy[i[0]] = {grafo_copy[i[0]]}')
+                    # Analisaremos apenas os nós que são adjacentes aos nós que já fazem parte do caminho mais curto 
+                    for v in  visitados:
+                        print(f'\n========== TESTE ==========\nv = {v}\n')
+                        print(f'\nNó atual = {v}\n')
+                        no_atual = v
+                        for i in grafo_copy[no_atual]:
+                                if(type(i) == list ):
+                                    if((i[0] in visitados) == True):
+                                        menor_caminho = True # achou um menor caminho
+                                        continue
+                                    else:
+                                        print(f'\nENTROU AQUI\n')
+                                        print("distancia_caminho = ", distancia_caminho)
+                                        nos_adj.append(i) 
+                                        print(f'Nós adjacentes de {no_atual} = {nos_adj}')
+                                        
+                                        #### atualizando a lista de distancia ####
+                                        for c in distancia_caminho:
+                                            if(c[0] == i[0]): # if(nó == nó não visitado)
+                                                # adiciona a distancia em relaçao ao nó inicial
+                                                if(c[1] == None):
+                                                    c[1] = 0
 
-                                                        for m in grafo_copy[i[0]]:
-                                                            if(type(m) == list and m[0] ==  menor[0]):
-                                                                print(f'm = {m} | m[1] = {m[1]} consegui?')
-                                                                c[1] = c[1] + m[1] # peso
-                                                           
+                                                # Adicioná-lo ao caminho o nó mais próximo do nó de origem
+                                                ####################################
+                                                
+                                                for caminho in distancia_caminho:
+                                                    if (menor_caminho == True):
+                                                        if(caminho[0] == menor[0]):
+                                                            # c[2].extend(caminho[2]) # caminho
+                                                            for m in grafo_copy[i[0]]:
+                                                                if(type(m) == list and m[0] ==  menor[0]):
+                                                                    c[1] = c[1] + m[1] # peso
+                                                            c[1] = c[1] + menor[1] # peso
+                                                            
+                                                    else:
+                                                        if(caminho[0] == no_atual):
+                                                            # c[2].extend(caminho[2]) # caminho
+                                                            c[1] = c[1] + caminho[1]# peso
+                                                            c[1] = c[1] + i[1]# peso
+                                                # c[2].append(i[0]) # caminho
+                                                
+                                                ####################################
+                                                
+                                                # Menor peso
+                                                for peso in distancia_caminho:
+                                                    print(f'peso = {peso} | i = {i} | no_atual = {no_atual} ')
+                                                    print(f'menor_no = {menor_no}')
+                                                    if(peso[0] == no_atual):
+                                                        print(f'peso[0] = {peso[0]} = no_atual = {no_atual} ')
+                                                        if(menor_dist == None):
+                                                            menor_dist = i[1] + peso[1]
+                                                            menor = i
+                                                            menor_no = no_atual
+                                                        else:
+                                                            if(menor_dist > (i[1] + peso[1])):
+                                                                menor_dist = i[1] + peso[1]
+                                                                menor = i
+                                                                menor_no = no_atual
+                                                               
 
-                                                   
-                                                        # c[1] = c[1] + grafo_copy[menor[2]] # peso
-                                                        # c[1] = c[1] + i[1] # peso
-                                                        c[1] = c[1] + menor[1] # peso
-                                                        
-                                                    
-                                                else:
-                                                    if(caminho[0] == no_atual):
-                                                        c[2].extend(caminho[2]) # caminho
-                                                        print(f'caminho[1] = {caminho[1]} |  i[1] = { i[1]}')
-                                                        c[1] = c[1] + caminho[1]# peso
-                                                        c[1] = c[1] + i[1]# peso
-                                            c[2].append(i[0])
-                                            
-                                            if(menor_dist == None):
-                                                menor_dist = i[1]
-                                                menor = i
-                                            else:
-                                                if(menor_dist > i[1]):
-                                                    menor_dist = i[1]
-                                                    menor = i # i 
-                                            print(f'visitados = {visitados}\nnao_visitados = {nao_visitados}')
-                                            print(f'\n ------ Nó atual = {no_atual }')
-                                            print(f'\nMENOR DIST. = {menor_dist}\n')
-                                            # Marcar como visitado o nó mais próximo do nó de origem
-                                            nao_visitados.remove(c[0])
-                                            visitados.append(c[0])
-                                            break
-                    print(f'\nMENOR DIST. for final = {menor_dist} | {menor}| {i}\n')
-                    menor_dist = None
+                                                # if(menor_dist == None):
+                                                #     menor_dist = i[1]
+                                                #     menor = i
+                                                # else:
+                                                #     if(menor_dist > i[1]):
+                                                #         menor_dist = i[1]
+                                                #         menor = i
+                                                break
+
+                        print(f'\n------- FIM DO FOR dentro -------')
+                        print(f'Nó atual = {v} | {no_atual}\n')
+                        print(f'\nMENOR DIST. for final = {menor_dist} | {menor}| {i} | menor_no = {menor_no}\n')
+                        print(f'\n-------------fim dentro---------------')
+                    
+                    print(f'\n------- FIM DO FOR fora -------')
+                    print(f'Nó atual = {v} | {no_atual}\n')
+                    print(f'\nMENOR DIST. for final = {menor_dist} | menor = {menor}| i = {i} | menor_no = {menor_no}\n')
+                    print(f'distancia_caminho  = {distancia_caminho}')
+                    
+
+                        
+
+                    # Marcar como visitado o nó mais próximo do nó de origem
+                    nao_visitados.remove(menor[0])
+                    visitados.append(menor[0])
+
+                    for c in distancia_caminho:
+                        if c[0] == no_atual:
+                            aux = c[2]
+                        if c[0] == menor[0]:
+                            c[2].extend(aux)
+                            c[2].append(menor[0])        
+
+                    # menor_dist = None
+                    print(f'\nNó atual = {v} | {no_atual}\n')
+                    print(f'caminho do {menor[0]} = {v} , {menor[0]}')
                     print(f'visitados = {visitados}\nnao_visitados = {nao_visitados}')
                     print("nos_adj = ", nos_adj )
                     print(f'Nós adjacentes de {no_atual} final do for = {nos_adj}')
                     print("distancia_caminho = ", distancia_caminho)
+                    menor_dist = None
+                    nos_adj = []
+                    print(f'\n-------------fim fora---------------')
 
-                    #### atualizando a lista de distancia ####
-                    # Adiciono o primeiro nó adjacente como o mais próximo do nó de origem
-
-                    #######################################################
-
-                    # menor_dist = nos_adj[0][0] 
-
-                    # for j in nos_adj:
-                    #     if(j[1] < menor_dist):
-                    #         menor_dist = j[0] # nó mais próximo do nó de origem
-
-                    #     for i in distancia_caminho:
-                    #         # print(i)
-                    #         if(j[0] == i[0]):
-                    #             # adiciona a distancia em relaçao ao nó inicial
-                    #             i[1] = j[1]
-                    # # Marcar como visitado o nó mais próximo do nó de origem
-                    # print("menor_dist teste teste = ", menor_dist)
-                    # nao_visitados.remove(menor_dist)
-                    # visitados.append(menor_dist)
-                
-                    # # Adicioná-lo ao caminho o nó mais próximo do nó de origem
-                    # for c in distancia_caminho:
-                    #     # print("c[0] = ", c[0])
-                    #     if(c[0] == menor_dist):
-                    #         # c.append([menor_dist])
-                    #         c[2].append(menor_dist)
-                    # print("menor_dist teste final = ", menor_dist)
-                    # print("distancia_caminho = ", distancia_caminho)
-                    # print(f'visitados = {visitados}')
-                    # print(f'nao_visitados = {nao_visitados}')
-                    # # menor_dist = nos_adj[0][0] 
-                    # print("menor_dist teste final = ", menor_dist)
-
-                    #######################################################
-
-                # while queue:
-                #     # print('queue = ', queue)
-                #     # print('vertice_destino = ', vertice_destino)
-                #     vertice = queue.pop(0)
-                #     if vertice not in visitados:
-                #         visitados.append(vertice)
-                #     # print(visitados)
+                    
                     
         except:
             # IMPLEMENTAR O VERTICE DE PARADA NO BFS
