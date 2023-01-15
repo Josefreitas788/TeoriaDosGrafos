@@ -317,13 +317,12 @@ class Grafo:
                     # self.grafo[int(x[0])].append([float(x[2])])
                     self.grafo[int(x[1])].append([int(x[0]), float(x[2])])
                     # self.grafo[int(x[1])].append([float(x[2])])
-                    selecionador = 1
                 
-                    if selecionador == 0:
-                        #se for um grafo sem peso vai executar esse bloco
-                        self.grafo[int(x[0])].append(int(x[1]))
-                        #if int(x[0]) not in self.grafo[int(x[1])]:
-                        self.grafo[int(x[1])].append(int(x[0]))
+                except IndexError:
+                    #se for um grafo sem peso vai executar esse bloco
+                    self.grafo[int(x[0])].append(int(x[1]))
+                    #if int(x[0]) not in self.grafo[int(x[1])]:
+                    self.grafo[int(x[1])].append(int(x[0]))
                 except:
                     #Esse bloco sempre vai ser executado na primeira linha do arquivo
                     self.vertices = int(x[0])
