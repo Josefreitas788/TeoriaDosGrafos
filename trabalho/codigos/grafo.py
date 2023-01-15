@@ -1,3 +1,4 @@
+import heapq
 import numpy as np 
 from scipy.sparse import csr_matrix
 import time
@@ -140,7 +141,7 @@ class Grafo:
             else:
                 for i in range(self.vertices[0]):
                     if i not in visitados:
-                        componentes = self.bfs(i, False)
+                        componentes = self.bfs(i, True)
                         # IMPRIMIR OS COMPONENTES CONEXOS, O MENOR,O MAIOR E A QUANTIDADE DE COMPONENTES CONEXOS
     # busca em largura 
     def bfs(self, vertice, returnTxt, verticeParada = None):
@@ -185,7 +186,7 @@ class Grafo:
                     visitados.append(vertice+1)
                     
                     for i in range(int(self.vertices[0])):
-                        if self.grafo[vertice][i] == 1 and i+1 not in visitados:
+                        if self.grafo[vertice][i] != 0 and i+1 not in visitados:
                             level[i+1] = level[vertice+1] + 1
                             queue.append(i)
             if(returnTxt == True):
@@ -229,7 +230,7 @@ class Grafo:
                     visitados.append(vertice+1)
                     
                     for i in range(int(self.vertices[0])):
-                        if self.grafo[vertice][i] == 1 and i+1 not in visitados:
+                        if self.grafo[vertice][i] != 0 and i+1 not in visitados:
                             stack.append(i)
                             level[i+1] = level[vertice+1] + 1
             
@@ -242,191 +243,65 @@ class Grafo:
         arq.write('Lista de adjacência = ' + str(self.grafo)  + '\n')
         arq.close()
 
-    def dijkstra_lista_adjacencia(self, vertice_inicial, vertice_destino):
-        menor_caminho = []
-        visitados = []
-        menor_caminho = False
-
-        # Lista de nós não visitados.
-        nao_visitados = []
-        queue = [vertice_inicial]
-        
-        #A distância do nó de origem para todos os outros nós
-        distancia_caminho = []
-
-        grafo_copy = {}
-        grafo_copy.update(self.grafo)
-        
-        print(f'Dijkstra self.grafo = {self.grafo} \n')
-        print(f'grafo_copy = {grafo_copy} \n')
-
-        try:
-            if(self.opcao == '1'): #lista de adjacência
-                chaves_grafo = self.grafo.keys()
-                nao_visitados.extend(list(chaves_grafo))
-                print(f'nao_visitados 1 = {nao_visitados}')
-
-                for i in list(chaves_grafo):
-                    if(i == vertice_inicial):
-                        # A distância do nó de origem até ele mesmo é 0
-                        distancia_caminho.append([i, 0, [vertice_inicial]])
-                        # Nó de origem marcado como visitado. 
-                        nao_visitados.remove(i)
-                        visitados.append(i)
-                    else:
-                        # A distância do nó de origem para todos os outros nós ainda não foi determinada
-                        distancia_caminho.append([i, None, []])
-
-                print(f'nao_visitados 2 = {nao_visitados}')
-                print(f'visitados 2 = {visitados}')
-                print("distancia_caminho = ", distancia_caminho)
-
-                # percorrer o grafo/nós não visitados e salvar a distancia do nó 0 até seus nós adjacentes.
-                # menor_dist = visitados[-1]
-                menor_dist = None
-                menor = 0
-                while len(nao_visitados) != 0:
-                    no_atual = visitados[-1]
-                    # menor_dist = None
-                    # menor_dist = grafo_copy[no_atual]
-                    nos_adj = [] # nós adjacentes do nó atual
-                    print(f'\nNó atual = {no_atual}\n')
-                    for i in grafo_copy[no_atual]:
-                            if(type(i) == list ):
-                                
-                                # Analisaremos apenas os nós que são adjacentes aos nós que já fazem parte do caminho mais curto 
-                                if((i[0] in visitados) == True):
-                                    print(f'\entrou aqui ? | nó ad = {i} | MENOR DIST. = {menor_dist}\n')
-                                    menor_caminho = True # achou um menor caminho
-                                    print(f'achou um menor caminho = {i[0]} | {i}')
-                                    # nos_adj.append(i) #deve ir para o próximo nó
-                                    continue
-                                else:
-                                    print(f'\nENTROU AQUI\n')
-                                    print("distancia_caminho = ", distancia_caminho)
-                                    nos_adj.append(i) 
-                                    print(f'Nós adjacentes de {no_atual} = {nos_adj}')
-                                    
-                                    #### atualizando a lista de distancia ####
-                                    for c in distancia_caminho:
-                                        if(c[0] == i[0]): # if(nó == nó não visitado)
-                                            # adiciona a distancia em relaçao ao nó inicial
-                                            if(c[1] == None):
-                                                c[1] = 0
-
-                                            # Adicioná-lo ao caminho o nó mais próximo do nó de origem
-                                            print(f'menor_caminho = {menor_caminho} |  c[1] = { c[1] }')
-                                            # if (menor_caminho == True): 
-                                            
-                                            for caminho in distancia_caminho:
-                                                if (menor_caminho == True):
-                                                    if(caminho[0] == menor[0]):
-                                                        c[2].extend(caminho[2]) # caminho
-                                                        
-                                                        print(f'caminho[1] = {caminho} | c[1] = {c[1]} | menor  {menor} | i = {i}')
-                                                     
-                                                        print(f'\n ------ Nó atual/i[0]= {i[0] }\ngrafo_copy = {grafo_copy[i[0]]}')
-                                                        #pegar o no grafo_copy[i[0]] o valor correto de c[1]
-                                                        
-                                                        # c[1] = c[1] + caminho[1] # peso
-                                                       
-                                                        print(f'menor[0] = {menor}\n grafo_copy[i[0]] = {grafo_copy[i[0]]}')
-
-                                                        for m in grafo_copy[i[0]]:
-                                                            if(type(m) == list and m[0] ==  menor[0]):
-                                                                print(f'm = {m} | m[1] = {m[1]} consegui?')
-                                                                c[1] = c[1] + m[1] # peso
-                                                           
-
-                                                   
-                                                        # c[1] = c[1] + grafo_copy[menor[2]] # peso
-                                                        # c[1] = c[1] + i[1] # peso
-                                                        c[1] = c[1] + menor[1] # peso
-                                                        
-                                                    
-                                                else:
-                                                    if(caminho[0] == no_atual):
-                                                        c[2].extend(caminho[2]) # caminho
-                                                        print(f'caminho[1] = {caminho[1]} |  i[1] = { i[1]}')
-                                                        c[1] = c[1] + caminho[1]# peso
-                                                        c[1] = c[1] + i[1]# peso
-                                            c[2].append(i[0])
-                                            
-                                            if(menor_dist == None):
-                                                menor_dist = i[1]
-                                                menor = i
-                                            else:
-                                                if(menor_dist > i[1]):
-                                                    menor_dist = i[1]
-                                                    menor = i # i 
-                                            print(f'visitados = {visitados}\nnao_visitados = {nao_visitados}')
-                                            print(f'\n ------ Nó atual = {no_atual }')
-                                            print(f'\nMENOR DIST. = {menor_dist}\n')
-                                            # Marcar como visitado o nó mais próximo do nó de origem
-                                            nao_visitados.remove(c[0])
-                                            visitados.append(c[0])
-                                            break
-                    print(f'\nMENOR DIST. for final = {menor_dist} | {menor}| {i}\n')
-                    menor_dist = None
-                    print(f'visitados = {visitados}\nnao_visitados = {nao_visitados}')
-                    print("nos_adj = ", nos_adj )
-                    print(f'Nós adjacentes de {no_atual} final do for = {nos_adj}')
-                    print("distancia_caminho = ", distancia_caminho)
-
-                    #### atualizando a lista de distancia ####
-                    # Adiciono o primeiro nó adjacente como o mais próximo do nó de origem
-
-                    #######################################################
-
-                    # menor_dist = nos_adj[0][0] 
-
-                    # for j in nos_adj:
-                    #     if(j[1] < menor_dist):
-                    #         menor_dist = j[0] # nó mais próximo do nó de origem
-
-                    #     for i in distancia_caminho:
-                    #         # print(i)
-                    #         if(j[0] == i[0]):
-                    #             # adiciona a distancia em relaçao ao nó inicial
-                    #             i[1] = j[1]
-                    # # Marcar como visitado o nó mais próximo do nó de origem
-                    # print("menor_dist teste teste = ", menor_dist)
-                    # nao_visitados.remove(menor_dist)
-                    # visitados.append(menor_dist)
-                
-                    # # Adicioná-lo ao caminho o nó mais próximo do nó de origem
-                    # for c in distancia_caminho:
-                    #     # print("c[0] = ", c[0])
-                    #     if(c[0] == menor_dist):
-                    #         # c.append([menor_dist])
-                    #         c[2].append(menor_dist)
-                    # print("menor_dist teste final = ", menor_dist)
-                    # print("distancia_caminho = ", distancia_caminho)
-                    # print(f'visitados = {visitados}')
-                    # print(f'nao_visitados = {nao_visitados}')
-                    # # menor_dist = nos_adj[0][0] 
-                    # print("menor_dist teste final = ", menor_dist)
-
-                    #######################################################
-
-                # while queue:
-                #     # print('queue = ', queue)
-                #     # print('vertice_destino = ', vertice_destino)
-                #     vertice = queue.pop(0)
-                #     if vertice not in visitados:
-                #         visitados.append(vertice)
-                #     # print(visitados)
-                    
-        except:
-            # IMPLEMENTAR O VERTICE DE PARADA NO BFS
-            bfs = self.bfs(vertice_inicial, True, vertice_destino)
-
-        if self.opcao == 2:
-            #dijkstra_Matriz
-            print("dijkstra_Matriz")
+    def dijkstra(self, vertice_inicial, vertice_destino):
+        if(self.opcao == '1'):
+            try:
+                print("dijkstra_lista_adjacencia")
+            
+                af
+            except:
+                bsf = self.bfs(vertice_inicial, False, vertice_destino)
+                print(bsf)
             
 
+        if self.opcao == '2':
+            if self.peso == True:
+                tamanho_do_grafo = len(self.grafo)
+                distancias = []
+                distancias = [np.inf for i in range(tamanho_do_grafo)]
+                distancias[vertice_inicial-1] = 0
+                menor_caminho = { i: [] for i in range(1,len(self.grafo)+1) }
+                menor_caminho[vertice_inicial] = [vertice_inicial]
+                fechado = [False for i in range(tamanho_do_grafo)]
+                visitados = []
+                heapq.heappush(visitados, (0, vertice_inicial-1))
 
+                while visitados:
+                    
+                    vertice = heapq.heappop(visitados)
+                    vertice_atual = vertice[1]
+                    fechado[vertice_atual] = True
+
+                    for vertice_adjacente in range(tamanho_do_grafo):
+
+                        if self.grafo[vertice_atual][vertice_adjacente] != 0:
+
+                            if distancias[vertice_adjacente] == np.inf:
+                                
+                                distancias[vertice_adjacente] = distancias[vertice_atual] + self.grafo[vertice_atual][vertice_adjacente]
+                                menor_caminho[vertice_adjacente+1] = menor_caminho[vertice_atual+1] + [vertice_adjacente+1]
+                                heapq.heappush(visitados, (distancias[vertice_adjacente], vertice_adjacente))
+                        
+                           
+                            if distancias[vertice_adjacente] != np.inf and fechado[vertice_adjacente] == False:
+
+                                if distancias[vertice_adjacente] > distancias[vertice_atual] + self.grafo[vertice_atual][vertice_adjacente]:
+
+                                    distancias[vertice_adjacente] = distancias[vertice_atual] + self.grafo[vertice_atual][vertice_adjacente]
+                                    menor_caminho[vertice_adjacente+1] = menor_caminho[vertice_adjacente+1].clear()
+                                    menor_caminho[vertice_adjacente+1] = menor_caminho[vertice_atual+1] + [vertice_adjacente+1]
+                                    #exclui o vertice adjacente da lista de visitados para inserir com a nova distancia
+                                    for i in range(len(visitados)):
+                                        if visitados[i][1] == vertice_adjacente:
+                                            visitados.pop(i)
+                                            break
+                                    heapq.heappush(visitados, (distancias[vertice_adjacente], vertice_adjacente))
+                                    
+                print("Menor caminho = ", menor_caminho)
+                print("Distancias = ", distancias)
+            else:
+                bfs = self.bfs(vertice_inicial, False, vertice_destino)
+                print("Caminho da busca em largura = ", bfs[0])
 
     #@profile
     def read_file(self, input_file):
@@ -468,15 +343,20 @@ class Grafo:
             del lista[0]
 
             # Criando a matriz com zeros 
-            self.grafo = csr_matrix((int(self.vertices[0]), int(self.vertices[0])), dtype = np.int8).toarray() 
+            self.grafo = csr_matrix((int(self.vertices[0]), int(self.vertices[0])), dtype = float).toarray()
             #[[None for x in range(int(self.vertices[0])+1)] for y in range(int(self.vertices[0])+1)]
             
             try:
+                self.peso = True
                 #adicionando arestas com pesos 
                 for i in lista:
+                    if(float(i[2]) < 0):
+                        self.peso = False
+                        
                     self.grafo[int(i[0])-1][int(i[1])-1] = float(i[2])
                     self.grafo[int(i[1])-1][int(i[0])-1] = float(i[2])
             except:
+                self.peso = False
                 #adicionando arestas
                 for i in lista:
                     self.grafo[int(i[0])-1][int(i[1])-1] = 1 
@@ -484,12 +364,13 @@ class Grafo:
                     
             print(self.grafo)
 
+
 if __name__ == "__main__":
     # programa de teste
     #nome_arq = "componentes_do_grafo_as_graph.txt"
     # nome_arq = "componentes_do_grafooooo.txt"
 
-    #g = Grafo("../grafos/teste2.txt")
+    g = Grafo("../grafos/teste.txt")
     # g.bfs(1,True)
     # g.dfs(1,True)
 
@@ -515,6 +396,7 @@ if __name__ == "__main__":
 #g.dados(nome_arq)
 
 ############### dijkstra #####################
-    g = Grafo("../grafos/teste2_dijkstra.txt")
+    #g = Grafo("../grafos/teste2_dijkstra.txt")
+    g.dijkstra(1, 3)
     #g.dijkstra_lista_adjacencia(1, 3)
 ####################################
