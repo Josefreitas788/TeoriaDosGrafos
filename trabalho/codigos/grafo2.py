@@ -256,6 +256,7 @@ class Grafo:
             if(self.opcao == '1'): #lista de adjacência
                 chaves_grafo = self.grafo.keys()
                 nao_visitados.extend(list(chaves_grafo))
+                print(f'chaves_grafo = {chaves_grafo}')
 
                 for i in list(chaves_grafo):
                     if(i == vertice_inicial):
