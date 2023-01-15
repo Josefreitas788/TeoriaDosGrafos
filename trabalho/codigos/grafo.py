@@ -247,8 +247,7 @@ class Grafo:
         if(self.opcao == '1'):
             try:
                 print("dijkstra_lista_adjacencia")
-            
-                af
+                print(f"self.grafo =  {self.grafo}")
             except:
                 bsf = self.bfs(vertice_inicial, False, vertice_destino)
                 print(bsf)
@@ -370,7 +369,7 @@ if __name__ == "__main__":
     #nome_arq = "componentes_do_grafo_as_graph.txt"
     # nome_arq = "componentes_do_grafooooo.txt"
 
-    g = Grafo("../grafos/teste.txt")
+    g = Grafo("../grafos/teste2_dijkstra.txt")
     # g.bfs(1,True)
     # g.dfs(1,True)
 
