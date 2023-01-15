@@ -182,9 +182,13 @@ class Grafo:
 
             while queue:
                 vertice = queue.pop(0)
+
+                if verticeParada != None:
+                    if vertice == verticeParada:
+                        return visitados
+
                 if vertice+1 not in visitados:
                     visitados.append(vertice+1)
-                    
                     for i in range(int(self.vertices[0])):
                         if self.grafo[vertice][i] != 0 and i+1 not in visitados:
                             level[i+1] = level[vertice+1] + 1
@@ -254,92 +258,91 @@ class Grafo:
             grafo_copy.update(self.grafo)
 
             try:
-                if(self.opcao == '1'): #lista de adjacência
-                    chaves_grafo = self.grafo.keys()
-                    nao_visitados.extend(list(chaves_grafo))
+                chaves_grafo = self.grafo.keys()
+                nao_visitados.extend(list(chaves_grafo))
 
-                    for i in list(chaves_grafo):
-                        if(i == vertice_inicial):
-                            # A distância do nó de origem até ele mesmo é 0
-                            distancia_caminho.append([i, 0, [vertice_inicial]])
-                            # Nó de origem marcado como visitado. 
-                            nao_visitados.remove(i)
-                            visitados.append(i)
-                        else:
-                            # A distância do nó de origem para todos os outros nós ainda não foi determinada
-                            distancia_caminho.append([i, None, []])
+                for i in list(chaves_grafo):
+                    if(i == vertice_inicial):
+                        # A distância do nó de origem até ele mesmo é 0
+                        distancia_caminho.append([i, 0, [vertice_inicial]])
+                        # Nó de origem marcado como visitado. 
+                        nao_visitados.remove(i)
+                        visitados.append(i)
+                    else:
+                        # A distância do nó de origem para todos os outros nós ainda não foi determinada
+                        distancia_caminho.append([i, None, []])
 
-                    # percorrer o grafo/nós não visitados e salvar a distancia do nó 0 até seus nós adjacentes.
-                    menor_dist = None
-                    menor = 0
-                    menor_no = vertice_inicial #raiz 
+                # percorrer o grafo/nós não visitados e salvar a distancia do nó 0 até seus nós adjacentes.
+                menor_dist = None
+                menor = 0
+                menor_no = vertice_inicial #raiz 
 
-                    while len(nao_visitados) != 0:
-                        no_atual = visitados[-1]
-                        nos_adj = []
-                        aux = None
-                        for v in  visitados:
-                            no_atual = v
-                            
-                            for i in grafo_copy[no_atual]:
-                                    if(type(i) == list ):
-                                        if((i[0] in visitados) == True):
-                                            continue
-                                        else:
-                                            nos_adj.append(i) 
-                                            #### atualizando a lista de distancia ####
-                                            for c in distancia_caminho:
-                                                if(c[0] == i[0]):
-                                                    for peso in distancia_caminho:
-                                                        if(peso[0] == menor_no):
-                                                            if(menor_dist == None):
+                while len(nao_visitados) != 0:
+                    no_atual = visitados[-1]
+                    nos_adj = []
+                    aux = None
+                    for v in  visitados:
+                        no_atual = v
+                        
+                        for i in grafo_copy[no_atual]:
+                                if(type(i) == list ):
+                                    if((i[0] in visitados) == True):
+                                        continue
+                                    else:
+                                        nos_adj.append(i) 
+                                        #### atualizando a lista de distancia ####
+                                        for c in distancia_caminho:
+                                            if(c[0] == i[0]):
+                                                for peso in distancia_caminho:
+                                                    if(peso[0] == menor_no):
+                                                        if(menor_dist == None):
+                                                            menor_dist = i[1] + peso[1]
+                                                            menor = i
+                                                            menor_no = no_atual
+                                                        else:
+                                                            if(menor_dist > (i[1] + peso[1])):
                                                                 menor_dist = i[1] + peso[1]
                                                                 menor = i
                                                                 menor_no = no_atual
                                                             else:
-                                                                if(menor_dist > (i[1] + peso[1])):
-                                                                    menor_dist = i[1] + peso[1]
-                                                                    menor = i
-                                                                    menor_no = no_atual
-                                                                else:
-                                                                    menor = i
-                                                                    menor_no = no_atual
+                                                                menor = i
+                                                                menor_no = no_atual
 
-                                                    for m in distancia_caminho:
-                                                        if(m[0] == menor_no):
-                                                            if(aux == None):
-                                                                aux = menor[1] + m[1]
-                                                                menor_aux = menor
-                                                                menor_no_aux = menor_no
-                                                            elif(aux >= (menor[1] + m[1])):
-                                                                menor_aux = menor
-                                                                menor_no_aux = menor_no
-                                                            else: 
-                                                                menor_aux = menor_aux
-                                                                menor_no_aux = menor_no_aux
-                                                        
-                                                            menor = menor_aux
-                                                            menor_no = menor_no_aux
-                                                    break
+                                                for m in distancia_caminho:
+                                                    if(m[0] == menor_no):
+                                                        if(aux == None):
+                                                            aux = menor[1] + m[1]
+                                                            menor_aux = menor
+                                                            menor_no_aux = menor_no
+                                                        elif(aux >= (menor[1] + m[1])):
+                                                            menor_aux = menor
+                                                            menor_no_aux = menor_no
+                                                        else: 
+                                                            menor_aux = menor_aux
+                                                            menor_no_aux = menor_no_aux
                                                     
-                        # Marcar como visitado o nó mais próximo do nó de origem
-                        nao_visitados.remove(menor[0])
-                        visitados.append(menor[0])
+                                                        menor = menor_aux
+                                                        menor_no = menor_no_aux
+                                                break
+                                                
+                    # Marcar como visitado o nó mais próximo do nó de origem
+                    nao_visitados.remove(menor[0])
+                    visitados.append(menor[0])
+                
+                    for c in distancia_caminho:
+                        if c[0] == menor_no:
+                            aux = c[2]
+                            p = c[1] #peso
+                        if c[0] == menor[0]:
+                            c[2].extend(aux) #caminho
+                            c[2].append(menor[0]) #caminho
+                            c[1] = menor[1] + p #peso 
+                    menor_dist = None
+                    nos_adj = []
                     
-                        for c in distancia_caminho:
-                            if c[0] == menor_no:
-                                aux = c[2]
-                                p = c[1] #peso
-                            if c[0] == menor[0]:
-                                c[2].extend(aux) #caminho
-                                c[2].append(menor[0]) #caminho
-                                c[1] = menor[1] + p #peso 
-                        menor_dist = None
-                        nos_adj = []
-                        
-                    print(f'--------------------- Resultado ---------------------')
-                    print("dijkstra_lista_adjacencia")
-                    print(f'distancia_caminho = \n{distancia_caminho}')
+                print(f'--------------------- Resultado ---------------------')
+                print("dijkstra_lista_adjacencia")
+                print(f'distancia_caminho = \n{distancia_caminho}')
             except:
                 bsf = self.bfs(vertice_inicial, False, vertice_destino)
                 print(bsf)
@@ -392,7 +395,7 @@ class Grafo:
                 print("Distancias = ", distancias)
             else:
                 bfs = self.bfs(vertice_inicial, False, vertice_destino)
-                print("Caminho da busca em largura = ", bfs[0])
+                print("Caminho da busca em largura = ", bfs)
 
     #@profile
     def read_file(self, input_file):
@@ -404,6 +407,7 @@ class Grafo:
                 x = line.split(" ")
                 selecionador = 0                
                 try:
+                    
                     #Se for uma grafo com peso vai executar esse bloco
                     self.grafo[int(x[0])].append([int(x[1]), float(x[2])])
                     # self.grafo[int(x[0])].append([float(x[2])])
@@ -460,7 +464,7 @@ if __name__ == "__main__":
     #nome_arq = "componentes_do_grafo_as_graph.txt"
     # nome_arq = "componentes_do_grafooooo.txt"
 
-    g = Grafo("../grafos/teste2_dijkstra.txt")
+    g = Grafo("../grafos/teste.txt")
     # g.bfs(1,True)
     # g.dfs(1,True)
 
