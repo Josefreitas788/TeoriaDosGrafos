@@ -145,13 +145,12 @@ class Grafo:
                         # IMPRIMIR OS COMPONENTES CONEXOS, O MENOR,O MAIOR E A QUANTIDADE DE COMPONENTES CONEXOS
     # busca em largura 
     def bfs(self, vertice, returnTxt, verticeParada = None):
-
         if(self.opcao == '1'):
             queue  = [vertice]
             visitados = []
             level = {}
             level[vertice] = 0
-
+        
             while queue:
                 vertice = queue.pop(0)
                 if vertice not in visitados:
@@ -160,12 +159,17 @@ class Grafo:
                     if verticeParada != None:
                         if vertice == verticeParada:
                             return visitados
+                    try:
+                        for i in self.grafo[vertice] :
+                            if i[0] not in visitados:
+                                level[i[0]] = level[vertice] + 1
+                                queue.append(i[0])
+                    except:
+                        for i in self.grafo[vertice] :
+                            if i not in visitados:
+                                level[i] = level[vertice] + 1
+                                queue.append(i)
                     
-                    for i in self.grafo[vertice] :
-                        if i not in visitados:
-                            level[i] = level[vertice] + 1
-                            queue.append(i)
-
             if(returnTxt == True):
                 arq = open("../outputs/VerticesVisitados_BuscaEmLargura.txt", "a")
                 arq.write('Vertices visitados = ' + str(visitados)  + '\n')
@@ -285,7 +289,7 @@ class Grafo:
                         no_atual = v
                         
                         for i in grafo_copy[no_atual]:
-                                if(type(i) == list ):
+                                if((type(i) == list) and ( i[1] >= 0)):
                                     if((i[0] in visitados) == True):
                                         continue
                                     else:
@@ -324,7 +328,10 @@ class Grafo:
                                                         menor = menor_aux
                                                         menor_no = menor_no_aux
                                                 break
-                                                
+                                else:
+                                    # Erro
+                                    break
+                                                   
                     # Marcar como visitado o nó mais próximo do nó de origem
                     nao_visitados.remove(menor[0])
                     visitados.append(menor[0])
@@ -340,10 +347,10 @@ class Grafo:
                     menor_dist = None
                     nos_adj = []
                     
-                print(f'--------------------- Resultado ---------------------')
-                print("dijkstra_lista_adjacencia")
+                print(f'---------------------Dijkstra (Lista de adjacência) ---------------------')
                 print(f'distancia_caminho = \n{distancia_caminho}')
             except:
+                print(f'--------------------- Busca em largura ---------------------')   
                 bsf = self.bfs(vertice_inicial, False, vertice_destino)
                 print(bsf)
             
@@ -390,7 +397,7 @@ class Grafo:
                                             visitados.pop(i)
                                             break
                                     heapq.heappush(visitados, (distancias[vertice_adjacente], vertice_adjacente))
-                                    
+                print(f'---------------------Dijkstra (Matriz) ---------------------')                  
                 print("Menor caminho = ", menor_caminho)
                 print("Distancias = ", distancias)
             else:
@@ -464,7 +471,9 @@ if __name__ == "__main__":
     #nome_arq = "componentes_do_grafo_as_graph.txt"
     # nome_arq = "componentes_do_grafooooo.txt"
 
-    g = Grafo("../grafos/teste.txt")
+    # g = Grafo("../grafos/teste.txt")
+    g = Grafo("../grafos/teste2_dijkstra.txt")
+    
     # g.bfs(1,True)
     # g.dfs(1,True)
 
