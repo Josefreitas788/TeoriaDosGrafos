@@ -347,8 +347,14 @@ class Grafo:
                     menor_dist = None
                     nos_adj = []
                     
-                print(f'---------------------Dijkstra (Lista de adjacência) ---------------------')
-                print(f'distancia_caminho = \n{distancia_caminho}')
+                print(f'\n---------------------Dijkstra (Lista de adjacência) ---------------------')
+                dic_res = {}
+                distancia_res = []
+                for res in distancia_caminho:
+                    dic_res[res[0]] = res[2] 
+                    distancia_res.append(res[1])
+                print(f'Menor caminho =  {dic_res}')
+                print(f'Distancias =  {distancia_res}\n')
             except:
                 print(f'--------------------- Busca em largura ---------------------')   
                 bsf = self.bfs(vertice_inicial, False, vertice_destino)
