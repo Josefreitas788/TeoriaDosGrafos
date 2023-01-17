@@ -473,13 +473,14 @@ class Grafo:
 
 
 if __name__ == "__main__":
+     
+    # g = Grafo("../grafos/trab2grafo_1.txt")
+ 
+
     # programa de teste
     #nome_arq = "componentes_do_grafo_as_graph.txt"
-    # nome_arq = "componentes_do_grafooooo.txt"
+    # nome_arq = "componentes_do_grafooooo.txt"  
 
-    # g = Grafo("../grafos/teste.txt")
-    g = Grafo("../grafos/teste2_dijkstra.txt")
-    
     # g.bfs(1,True)
     # g.dfs(1,True)
 
@@ -505,7 +506,17 @@ if __name__ == "__main__":
 #g.dados(nome_arq)
 
 ############### dijkstra #####################
-    #g = Grafo("../grafos/teste2_dijkstra.txt")
-    g.dijkstra(1, 3)
-    #g.dijkstra_lista_adjacencia(1, 3)
+
+    # g = Grafo("../grafos/trab2grafo_1.txt")
+    # g = Grafo("../grafos/trab2grafo_2.txt")
+    # g = Grafo("../grafos/trab2grafo_3.txt")
+    # g = Grafo("../grafos/trab2grafo_4.txt")  
+    # g = Grafo("../grafos/trab2grafo_5.txt") 
+
+    g.dijkstra(1, 10)
+    # g.dijkstra(1, 100)
+    # g.dijkstra(1, 1000)
+    # g.dijkstra(1, 10000)
+
+
 ####################################
