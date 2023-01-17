@@ -450,7 +450,7 @@ class Grafo:
             del lista[0]
 
             # Criando a matriz com zeros 
-            self.grafo = csr_matrix((int(self.vertices[0]), int(self.vertices[0])), dtype = float).toarray()
+            self.grafo = csr_matrix((int(self.vertices[0]), int(self.vertices[0])), dtype = np.float32).toarray()
             #[[None for x in range(int(self.vertices[0])+1)] for y in range(int(self.vertices[0])+1)]
             
             try:
