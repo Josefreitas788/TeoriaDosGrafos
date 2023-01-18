@@ -253,109 +253,53 @@ class Grafo:
 
     def dijkstra(self, vertice_inicial, vertice_destino):
         if(self.opcao == '1'):
-            visitados = []
-            # Lista de nós não visitados.
-            nao_visitados = []
-            #A distância do nó de origem para todos os outros nós
-            distancia_caminho = []
-            grafo_copy = {}
-            grafo_copy.update(self.grafo)
+            if self.peso == True:
+                tamanho_do_grafo = len(self.grafo)
+                distancias = []
+                distancias = [np.inf for i in range(tamanho_do_grafo)]
+                distancias[vertice_inicial-1] = 0
+                menor_caminho = { i: [] for i in range(1,len(self.grafo)+1) }
+                menor_caminho[vertice_inicial] = [vertice_inicial]
+                fechado = [False for i in range(tamanho_do_grafo)]
+                visitados = []
+                heapq.heappush(visitados, (0, vertice_inicial))
+    
 
-            try:
-                chaves_grafo = self.grafo.keys()
-                nao_visitados.extend(list(chaves_grafo))
-
-                for i in list(chaves_grafo):
-                    if(i == vertice_inicial):
-                        # A distância do nó de origem até ele mesmo é 0
-                        distancia_caminho.append([i, 0, [vertice_inicial]])
-                        # Nó de origem marcado como visitado. 
-                        nao_visitados.remove(i)
-                        visitados.append(i)
-                    else:
-                        # A distância do nó de origem para todos os outros nós ainda não foi determinada
-                        distancia_caminho.append([i, None, []])
-
-                # percorrer o grafo/nós não visitados e salvar a distancia do nó 0 até seus nós adjacentes.
-                menor_dist = None
-                menor = 0
-                menor_no = vertice_inicial #raiz 
-
-                while len(nao_visitados) != 0:
-                    no_atual = visitados[-1]
-                    nos_adj = []
-                    aux = None
-                    for v in  visitados:
-                        no_atual = v
-                        
-                        for i in grafo_copy[no_atual]:
-                                if((type(i) == list) and ( i[1] >= 0)):
-                                    if((i[0] in visitados) == True):
-                                        continue
-                                    else:
-                                        nos_adj.append(i) 
-                                        #### atualizando a lista de distancia ####
-                                        for c in distancia_caminho:
-                                            if(c[0] == i[0]):
-                                                for peso in distancia_caminho:
-                                                    if(peso[0] == menor_no):
-                                                        if(menor_dist == None):
-                                                            menor_dist = i[1] + peso[1]
-                                                            menor = i
-                                                            menor_no = no_atual
-                                                        else:
-                                                            if(menor_dist > (i[1] + peso[1])):
-                                                                menor_dist = i[1] + peso[1]
-                                                                menor = i
-                                                                menor_no = no_atual
-                                                            else:
-                                                                menor = i
-                                                                menor_no = no_atual
-
-                                                for m in distancia_caminho:
-                                                    if(m[0] == menor_no):
-                                                        if(aux == None):
-                                                            aux = menor[1] + m[1]
-                                                            menor_aux = menor
-                                                            menor_no_aux = menor_no
-                                                        elif(aux >= (menor[1] + m[1])):
-                                                            menor_aux = menor
-                                                            menor_no_aux = menor_no
-                                                        else: 
-                                                            menor_aux = menor_aux
-                                                            menor_no_aux = menor_no_aux
-                                                    
-                                                        menor = menor_aux
-                                                        menor_no = menor_no_aux
-                                                break
-                                else:
-                                    # Erro
-                                    break
-                                                   
-                    # Marcar como visitado o nó mais próximo do nó de origem
-                    nao_visitados.remove(menor[0])
-                    visitados.append(menor[0])
-                
-                    for c in distancia_caminho:
-                        if c[0] == menor_no:
-                            aux = c[2]
-                            p = c[1] #peso
-                        if c[0] == menor[0]:
-                            c[2].extend(aux) #caminho
-                            c[2].append(menor[0]) #caminho
-                            c[1] = menor[1] + p #peso 
-                    menor_dist = None
-                    nos_adj = []
+                while visitados:
                     
-                print(f'\n---------------------Dijkstra (Lista de adjacência) ---------------------')
-                dic_res = {}
-                distancia_res = []
-                for res in distancia_caminho:
-                    dic_res[res[0]] = res[2] 
-                    distancia_res.append(res[1])
-                print(f'Menor caminho =  {dic_res}')
-                print(f'Distancias =  {distancia_res}\n')
-            except:
+                    vertice = heapq.heappop(visitados)
+                    vertice_atual = vertice[1]
+                    fechado[vertice_atual-1] = True
+
+                    for vertice_adjacente in self.grafo[vertice_atual]:
+                        if vertice_adjacente[0] not in visitados:
+                            
+                            #if vertice_adjacente[0] not in fechado:
+                            if distancias[vertice_adjacente[0]-1] == np.inf:
+                                
+                                distancias[vertice_adjacente[0]-1] = distancias[vertice_atual-1] + vertice_adjacente[1]
+                                menor_caminho[vertice_adjacente[0]] = menor_caminho[vertice_atual] + [vertice_adjacente[0]]
+                                heapq.heappush(visitados, (distancias[vertice_adjacente[0]-1], vertice_adjacente[0]))
+                        
+                           
+                            if distancias[vertice_adjacente[0]-1] != np.inf and fechado[vertice_adjacente[0]-1] == False:
+
+                                if distancias[vertice_adjacente[0]-1] > distancias[vertice_atual-1] + vertice_adjacente[1]:
+
+                                    distancias[vertice_adjacente[0]-1] = distancias[vertice_atual-1] + vertice_adjacente[1]
+                                    menor_caminho[vertice_adjacente[0]] = menor_caminho[vertice_adjacente[0]].clear()
+                                    menor_caminho[vertice_adjacente[0]] = menor_caminho[vertice_atual] + [vertice_adjacente[0]]
+                                    #exclui o vertice adjacente da lista de visitados para inserir com a nova distancia
+                                    for i in range(len(visitados)):
+                                        if visitados[i][1] == vertice_adjacente[0]:
+                                            visitados.pop(i)
+                                            break
+                                    heapq.heappush(visitados, (distancias[vertice_adjacente[0]-1], vertice_adjacente[0]))
+
+                            
+                print("Menor caminho = ", menor_caminho)
+                print("Distancias = ", distancias)
+            else:
                 print(f'--------------------- Busca em largura ---------------------')   
                 bsf = self.bfs(vertice_inicial, False, vertice_destino)
                 print(bsf)
@@ -426,12 +370,13 @@ class Grafo:
                     # self.grafo[int(x[0])].append([float(x[2])])
                     self.grafo[int(x[1])].append([int(x[0]), float(x[2])])
                     # self.grafo[int(x[1])].append([float(x[2])])
-                
+                    self.peso = True
                 except IndexError:
                     #se for um grafo sem peso vai executar esse bloco
                     self.grafo[int(x[0])].append(int(x[1]))
                     #if int(x[0]) not in self.grafo[int(x[1])]:
                     self.grafo[int(x[1])].append(int(x[0]))
+                    self.peso = False
                 except:
                     #Esse bloco sempre vai ser executado na primeira linha do arquivo
                     self.vertices = int(x[0])
@@ -507,16 +452,17 @@ if __name__ == "__main__":
 
 ############### dijkstra #####################
 
-    # g = Grafo("../grafos/trab2grafo_1.txt")
-    # g = Grafo("../grafos/trab2grafo_2.txt")
+    #g = Grafo("../grafos/trab2grafo_1.txt")
+    #g = Grafo("../grafos/trab2grafo_2.txt")
     # g = Grafo("../grafos/trab2grafo_3.txt")
-    # g = Grafo("../grafos/trab2grafo_4.txt")  
-    # g = Grafo("../grafos/trab2grafo_5.txt") 
-
-    g.dijkstra(1, 10)
-    # g.dijkstra(1, 100)
+    #g = Grafo("../grafos/trab2grafo_4.txt")  
+    g = Grafo("../grafos/trab2grafo_5.txt") 
+    #g = Grafo("../grafos/teste_dijkstra.txt")
+    #g.dijkstra(1, 3)
+    #g.dijkstra(1, 10)
+    g.dijkstra(1, 100)
     # g.dijkstra(1, 1000)
     # g.dijkstra(1, 10000)
-
+    
 
 ####################################
