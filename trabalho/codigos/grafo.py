@@ -297,8 +297,9 @@ class Grafo:
                                     heapq.heappush(visitados, (distancias[vertice_adjacente[0]-1], vertice_adjacente[0]))
 
                             
-                print("Menor caminho = ", menor_caminho)
-                print("Distancias = ", distancias)
+                #print("Menor caminho = ", menor_caminho)
+                #print("Distancias = ", distancias)
+                return menor_caminho, distancias
             else:
                 print(f'--------------------- Busca em largura ---------------------')   
                 bsf = self.bfs(vertice_inicial, False, vertice_destino)
@@ -347,9 +348,10 @@ class Grafo:
                                             visitados.pop(i)
                                             break
                                     heapq.heappush(visitados, (distancias[vertice_adjacente], vertice_adjacente))
-                print(f'---------------------Dijkstra (Matriz) ---------------------')                  
-                print("Menor caminho = ", menor_caminho)
-                print("Distancias = ", distancias)
+                #print(f'---------------------Dijkstra (Matriz) ---------------------')                  
+                #print("Menor caminho = ", menor_caminho)
+                #print("Distancias = ", distancias)
+                return menor_caminho, distancias
             else:
                 bfs = self.bfs(vertice_inicial, False, vertice_destino)
                 print("Caminho da busca em largura = ", bfs)
@@ -382,7 +384,7 @@ class Grafo:
                     self.vertices = int(x[0])
                     self.grafo = { i: [] for i in range(1 , self.vertices+1) }
                     pass
-            print('Grafo = ', self.grafo)
+            #print('Grafo = ', self.grafo)
         
         elif(self.opcao == '2'):
             lista = []
@@ -414,55 +416,28 @@ class Grafo:
                     self.grafo[int(i[0])-1][int(i[1])-1] = 1 
                     self.grafo[int(i[1])-1][int(i[0])-1] = 1
                     
-            print(self.grafo)
+            #print(self.grafo)
 
 
 if __name__ == "__main__":
      
-    # g = Grafo("../grafos/trab2grafo_1.txt")
- 
-
-    # programa de teste
-    #nome_arq = "componentes_do_grafo_as_graph.txt"
-    # nome_arq = "componentes_do_grafooooo.txt"  
-
-    # g.bfs(1,True)
-    # g.dfs(1,True)
-
-# nome_arq = "../componentes_conexos_as_graph.txt"
-# g = Grafo("../collaboration_graph.txt")
-    #g = Grafo("../grafos/as_graph.txt")
-    #g = Grafo("../grafos/trab2grafo_1.txt")
-
-    # g.dados()
-####################################
-# start = time.perf_counter()
-
-# g.bfs(1)
-
-# end = time.perf_counter()
-# lista_time = []
-# lista_time.append(end - start)
-# print('lista_time = ', lista_time)
-####################################
-    # print("DFS")
-    # g.dfs(1)
-# g.conexo(nome_arq)
-#g.dados(nome_arq)
-
-############### dijkstra #####################
-
-    #g = Grafo("../grafos/trab2grafo_1.txt")
-    #g = Grafo("../grafos/trab2grafo_2.txt")
-    # g = Grafo("../grafos/trab2grafo_3.txt")
-    #g = Grafo("../grafos/trab2grafo_4.txt")  
-    g = Grafo("../grafos/trab2grafo_5.txt") 
-    #g = Grafo("../grafos/teste_dijkstra.txt")
+    g = Grafo("../grafos/trab2grafo_3.txt") 
     #g.dijkstra(1, 3)
     #g.dijkstra(1, 10)
-    g.dijkstra(1, 100)
-    # g.dijkstra(1, 1000)
-    # g.dijkstra(1, 10000)
+    menor_caminho, distancias = g.dijkstra(1, 100)
+    try:
+        print("\nMenor caminho 1 - 10= ", menor_caminho[10])
+        print("Distancias 1 - 10 = ", distancias[9])
+        print("\nMenor caminho 1 - 100= ", menor_caminho[100])
+        print("Distancias 1 - 100 = ", distancias[99])
+        print("\nMenor caminho 1 - 1000= ", menor_caminho[1000])
+        print("Distancias 1 - 1000 = ", distancias[999])
+        print("\nMenor caminho 1 - 10000= ", menor_caminho[10000])
+        print("Distancias 1 - 10000 = ", distancias[9999])
+
+    except:
+        pass
+    
     
 
 ####################################
